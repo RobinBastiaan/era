@@ -13,8 +13,6 @@
     </style>
 </head>
 <body>
-    <!-- The Era div -->
-    <div id="era"></div>
 
     <!-- The source table -->
     <table id="source-table" style="width: 400px;">
@@ -52,8 +50,43 @@
         </tbody>
     </table>
 
+    <hr>
+
+    <!-- The Era div -->
+    <div id="era"></div>
+
     <script>
-        document.getElementById("era").innerHTML = 'Output test';
+        // get the smallest starting year
+        function getMinYear() {
+            let minYear = Number.MAX_SAFE_INTEGER; // init
+            let children = document.getElementById("source-table").children[0];
+            let len = children.childElementCount;
+            for (let i = 1; i < len; i++) {
+                let year = parseInt(children.children[i].children[2].innerHTML); // parseInt to remove e.g. &nbsp;
+                if (year < minYear) {
+                    minYear = year;
+                }
+            }
+            return minYear;
+        }
+
+        // get the biggest ending year
+        function getMaxYear() {
+            let maxYear = 0; // init
+            let children = document.getElementById("source-table").children[0];
+            let len = children.childElementCount;
+            for (let i = 1; i < len; i++) {
+                let year = parseInt(children.children[i].children[3].innerHTML); // parseInt to remove e.g. &nbsp;
+                if (year > maxYear) {
+                    maxYear = year;
+                }
+            }
+            return maxYear;
+        }
+
+        let minYear = getMinYear();
+        let maxYear = getMaxYear();
+        document.getElementById("era").innerHTML = minYear + " - " + maxYear;
     </script>
 </body>
 </html>
