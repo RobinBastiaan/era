@@ -48,39 +48,39 @@
             <td><strong>Eindjaar</strong></td>
         </tr>
         <tr>
+            <td>Rowan</td>
+            <td></td>
+            <td>2010</td>
+            <td></td>
+            <td>2016</td>
+        </tr>
+        <tr>
             <td>Robin</td>
-            <td>2011</td>
+            <td>2010</td>
             <td>2011</td>
             <td></td>
             <td>2020</td>
         </tr>
         <tr>
             <td>Wilco</td>
+            <td>2010</td>
             <td>2011</td>
-            <td>2011</td>
-            <td>2016</td>
+            <td>2015</td>
             <td>2020</td>
+        </tr>
+        <tr>
+            <td>Leon</td>
+            <td></td>
+            <td>2013</td>
+            <td>2020</td>
+            <td></td>
         </tr>
         <tr>
             <td>Rik</td>
             <td></td>
             <td>2015</td>
             <td></td>
-            <td>2018</td>
-        </tr>
-        <tr>
-            <td>Rowan</td>
-            <td></td>
-            <td>2012</td>
-            <td></td>
-            <td>2014</td>
-        </tr>
-        <tr>
-            <td>Leon</td>
-            <td></td>
-            <td>2015</td>
-            <td>2020</td>
-            <td></td>
+            <td>2019</td>
         </tr>
         <tr>
             <td>Martijn</td>
@@ -160,8 +160,8 @@
                 let durationHopman = isNaN(beginHopman) ? 0 : end - beginHopman + 1;
                 let div = document.createElement("div");
                 div.classList.add("staff-member");
-                div.style.cssText = `margin-left: ${(begin-minYear)*100}px;` +
-                                    `width: ${(end-begin+1)*100-30}px;` +
+                div.style.cssText = `margin-left: ${(begin-minYear)*100+50}px;` +
+                                    `width: ${(end-begin)*100-30}px;` +
                                     `background: linear-gradient(to right, var(--hulpstaff-color), var(--hulpstaff-color) ${(durationHulpStaff)*100}px,\n` +
                                     `var(--staff-color) ${(durationHulpStaff)*100}px, var(--staff-color) ${(durationHulpStaff + durationStaff)*100}px,\n` +
                                     `var(--hopman-color) ${(durationHulpStaff + durationStaff)*100}px, var(--hopman-color) ${(durationHulpStaff + durationStaff + durationHopman)*100}px);`;
