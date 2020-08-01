@@ -19,6 +19,14 @@
         #era {
             border: 1px solid black;
          }
+        .legend {
+            display: inline-block;
+            width: 94px;
+            background-color: lightgrey;
+            font-weight: 700;
+            text-align: center;
+            border: 3px solid black;
+        }
         .staff-member {
             padding: 10px 15px;
             margin: 5px;
@@ -127,6 +135,14 @@
             let minYear = getMinYear();
             let maxYear = getMaxYear();
 
+            // show legend
+            for (let i = minYear; i <= maxYear; i++) {
+                let div = document.createElement("div");
+                div.classList.add("legend");
+                div.append(`${i}`);
+                document.getElementById("era").append(div);
+            }
+
             // show all members
             let children = document.getElementById("source-table").children[0];
             let len = children.childElementCount;
@@ -145,7 +161,7 @@
                 let div = document.createElement("div");
                 div.classList.add("staff-member");
                 div.style.cssText = `margin-left: ${(begin-minYear)*100}px;` +
-                                    `width: ${(end-begin)*100}px;` +
+                                    `width: ${(end-begin+1)*100-30}px;` +
                                     `background: linear-gradient(to right, var(--hulpstaff-color), var(--hulpstaff-color) ${(durationHulpStaff)*100}px,\n` +
                                     `var(--staff-color) ${(durationHulpStaff)*100}px, var(--staff-color) ${(durationHulpStaff + durationStaff)*100}px,\n` +
                                     `var(--hopman-color) ${(durationHulpStaff + durationStaff)*100}px, var(--hopman-color) ${(durationHulpStaff + durationStaff + durationHopman)*100}px);`;
