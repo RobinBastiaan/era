@@ -7,8 +7,23 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Era</title>
     <style>
+        :root {
+            --hulpstaff-color: #FEE9A0;
+            --staff-color: #fccf2d;
+            --hopman-color: #ffb700;
+        }
+
         #source-table { // only show the source table when editing the page
             //display: none;
+        }
+        #era {
+            border: 1px solid black;
+         }
+        .staff-member {
+            padding: 10px 15px;
+            margin: 5px;
+            border-radius: 15px;
+            font-weight: 700;
         }
     </style>
 </head>
@@ -26,14 +41,14 @@
         </tr>
         <tr>
             <td>Robin</td>
-            <td></td>
-            <td>2010</td>
+            <td>2011</td>
+            <td>2011</td>
             <td></td>
             <td>2020</td>
         </tr>
         <tr>
             <td>Wilco</td>
-            <td>2010</td>
+            <td>2011</td>
             <td>2011</td>
             <td>2016</td>
             <td>2020</td>
@@ -51,6 +66,20 @@
             <td>2012</td>
             <td></td>
             <td>2014</td>
+        </tr>
+        <tr>
+            <td>Leon</td>
+            <td></td>
+            <td>2015</td>
+            <td>2020</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>Martijn</td>
+            <td>2018</td>
+            <td>2019</td>
+            <td></td>
+            <td></td>
         </tr>
         </tbody>
     </table>
@@ -93,25 +122,33 @@
             return maxYear;
         }
 
-        //let minYear = getMinYear();
-        //let maxYear = getMaxYear();
-        //document.getElementById("era").innerHTML = minYear + " - " + maxYear;
-
         // show the entire timeline of the era
         function showEra() {
+            let minYear = getMinYear();
+            let maxYear = getMaxYear();
 
             // show all members
             let children = document.getElementById("source-table").children[0];
             let len = children.childElementCount;
             for (let i = 1; i < len; i++) {
                 let name = children.children[i].children[0].innerHTML;
-                let begin1 = parseInt(children.children[i].children[1].innerHTML);
-                let begin2 = parseInt(children.children[i].children[2].innerHTML);
-                let begin3 = parseInt(children.children[i].children[3].innerHTML);
-                let begin = Math.min(isNaN(begin1) ? Infinity : begin1, isNaN(begin2) ? Infinity : begin2, isNaN(begin3) ? Infinity : begin3);
+                let beginHulpStaff = parseInt(children.children[i].children[1].innerHTML);
+                let beginStaff = parseInt(children.children[i].children[2].innerHTML);
+                let beginHopman = parseInt(children.children[i].children[3].innerHTML);
+                let begin = Math.min(isNaN(beginHulpStaff) ? Infinity : beginHulpStaff,
+                    isNaN(beginStaff) ? Infinity : beginStaff, isNaN(beginHopman) ? Infinity : beginHopman);
                 let end = parseInt(children.children[i].children[4].innerHTML);
-
+                end = isNaN(end) ? new Date().getFullYear() : end; // if not ended; take current year
+                let durationHulpStaff = isNaN(beginHulpStaff) ? 0 : beginStaff - beginHulpStaff;
+                let durationStaff = isNaN(beginStaff) ? 0 : (isNaN(beginHopman) ? end - beginStaff + 1 : beginHopman - beginStaff);
+                let durationHopman = isNaN(beginHopman) ? 0 : end - beginHopman + 1;
                 let div = document.createElement("div");
+                div.classList.add("staff-member");
+                div.style.cssText = `margin-left: ${(begin-minYear)*100}px;` +
+                                    `width: ${(end-begin)*100}px;` +
+                                    `background: linear-gradient(to right, var(--hulpstaff-color), var(--hulpstaff-color) ${(durationHulpStaff)*100}px,\n` +
+                                    `var(--staff-color) ${(durationHulpStaff)*100}px, var(--staff-color) ${(durationHulpStaff + durationStaff)*100}px,\n` +
+                                    `var(--hopman-color) ${(durationHulpStaff + durationStaff)*100}px, var(--hopman-color) ${(durationHulpStaff + durationStaff + durationHopman)*100}px);`;
                 div.append(`${name} (${begin} - ${end})`);
                 document.getElementById("era").append(div);
             }
