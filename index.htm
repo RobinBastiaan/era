@@ -15,36 +15,41 @@
 <body>
 
     <!-- The source table -->
-    <table id="source-table" style="width: 400px;">
+    <table id="source-table" style="width: 600px;">
         <tbody>
         <tr>
             <td><strong>Staflid</strong></td>
-            <td><strong>Functie</strong></td>
-            <td><strong>Beginjaar</strong></td>
+            <td><strong>Hulpvaandrig sinds</strong></td>
+            <td><strong>Vaandrig sinds</strong></td>
+            <td><strong>Hopman sinds</strong></td>
             <td><strong>Eindjaar</strong></td>
         </tr>
         <tr>
             <td>Robin</td>
-            <td>Vaandrig</td>
-            <td>2010&nbsp;</td>
+            <td></td>
+            <td>2010</td>
+            <td></td>
             <td>2020</td>
         </tr>
         <tr>
             <td>Wilco</td>
-            <td>Hopman</td>
-            <td>2010&nbsp;</td>
+            <td></td>
+            <td>2010</td>
+            <td>2016</td>
             <td>2020</td>
         </tr>
         <tr>
             <td>Rik</td>
-            <td>Vaandrig</td>
-            <td>2015&nbsp;</td>
+            <td></td>
+            <td>2015</td>
+            <td></td>
             <td>2018</td>
         </tr>
         <tr>
             <td>Rowan</td>
-            <td>Vaandrig</td>
-            <td>2012&nbsp;</td>
+            <td></td>
+            <td>2012</td>
+            <td></td>
             <td>2014</td>
         </tr>
         </tbody>
@@ -62,7 +67,11 @@
             let children = document.getElementById("source-table").children[0];
             let len = children.childElementCount;
             for (let i = 1; i < len; i++) {
-                let year = parseInt(children.children[i].children[2].innerHTML); // parseInt to remove e.g. &nbsp;
+                let year = parseInt(children.children[i].children[1].innerHTML); // parseInt to remove e.g. &nbsp;
+                if (year < minYear) {
+                    minYear = year;
+                }
+                year = parseInt(children.children[i].children[2].innerHTML); // parseInt to remove e.g. &nbsp;
                 if (year < minYear) {
                     minYear = year;
                 }
@@ -76,7 +85,7 @@
             let children = document.getElementById("source-table").children[0];
             let len = children.childElementCount;
             for (let i = 1; i < len; i++) {
-                let year = parseInt(children.children[i].children[3].innerHTML); // parseInt to remove e.g. &nbsp;
+                let year = parseInt(children.children[i].children[4].innerHTML); // parseInt to remove e.g. &nbsp;
                 if (year > maxYear) {
                     maxYear = year;
                 }
