@@ -30,20 +30,30 @@
         }
         .staff-member {
             position: relative;
+            height: 18px;
             padding: 10px 15px;
             margin: 5px;
             border-radius: 15px;
+            font-size: 16px;
             font-weight: 700;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
+            transition: .2s;
+        }
+        .staff-member:hover {
+            height: 22px;
+            font-weight: bolder;
+            font-size: 19px;
+            padding: 8px 15px;
+            filter: brightness(97%);
         }
         .no-end {
             border-radius: 15px 0 0 15px;
         }
         .no-end:after {
             content: "";
-            height: 100%;
+            height: 110%;
             margin-top: -10px;
             position: absolute;
             z-index: 1;
@@ -188,11 +198,13 @@
                                     `background: linear-gradient(to right, var(--hulpstaff-color), var(--hulpstaff-color) ${(durationHulpStaff)*100}px,\n` +
                                     `var(--staff-color) ${(durationHulpStaff)*100}px, var(--staff-color) ${(durationHulpStaff + durationStaff)*100}px,\n` +
                                     `var(--hopman-color) ${(durationHulpStaff + durationStaff)*100}px, var(--hopman-color) ${(durationHulpStaff + durationStaff + durationHopman)*100}px);`;
+                let span = document.createElement("span");
                 if (ended) {
-                    div.append(`${name} (${begin} - ${end})`);
+                    span.append(`${name} (${begin} - ${end})`);
                 } else { // only show begin year when no yet ended
-                    div.append(`${name} (${begin})`);
+                    span.append(`${name} (${begin})`);
                 }
+                div.append(span);
                 document.getElementById("era").append(div);
             }
         }
