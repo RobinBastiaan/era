@@ -18,6 +18,7 @@
         }
         #era {
             border: 1px solid black;
+            background: repeating-linear-gradient(to right, white, white 100px, #F4F4F4 100px, #F4F4F4 200px);
          }
         .legend {
             position: relative;
@@ -103,13 +104,6 @@
             <td><strong>Eindjaar</strong></td>
         </tr>
         <tr>
-            <td>Rowan</td>
-            <td></td>
-            <td>2010</td>
-            <td></td>
-            <td>2016</td>
-        </tr>
-        <tr>
             <td>Robin</td>
             <td>2010</td>
             <td>2011</td>
@@ -144,6 +138,13 @@
             <td></td>
             <td></td>
         </tr>
+        <tr>
+            <td>Rowan</td>
+            <td></td>
+            <td>2010</td>
+            <td></td>
+            <td>2016</td>
+        </tr>
         </tbody>
     </table>
 
@@ -152,6 +153,7 @@
     <!-- The Era div -->
     <div id="era"></div>
 
+    <!-- Since the platform does not allow larger script tags, it is split -->
     <script>
         // get the smallest starting year
         function getMinYear() {
@@ -185,10 +187,23 @@
             return maxYear;
         }
 
+        // to allow sorting on the starting column
+        function compareColumn(a, b) {
+            if (a[2] === b[2]) {
+                return 0;
+            }
+            else {
+                return (a[2] < b[2]) ? -1 : 1;
+            }
+        }
+    </script>
+    <script>
         // show the entire timeline of the era
         function showEra() {
             let minYear = getMinYear();
             let maxYear = getMaxYear();
+
+            document.getElementById("era").style.width = (maxYear - minYear + 1)*100 + "px";
 
             // show legend
             for (let i = minYear; i <= maxYear; i++) {
@@ -201,21 +216,33 @@
             // show all members
             let children = document.getElementById("source-table").children[0];
             let len = children.childElementCount;
+            let staffArray = [];
             for (let i = 1; i < len; i++) {
-                let name = children.children[i].children[0].innerHTML;
-                let beginHulpStaff = parseInt(children.children[i].children[1].innerHTML);
-                let beginStaff = parseInt(children.children[i].children[2].innerHTML);
-                let beginHopman = parseInt(children.children[i].children[3].innerHTML);
-                let begin = Math.min(isNaN(beginHulpStaff) ? Infinity : beginHulpStaff,
-                    isNaN(beginStaff) ? Infinity : beginStaff, isNaN(beginHopman) ? Infinity : beginHopman);
-                let rawEnd = parseInt(children.children[i].children[4].innerHTML);
-                let ended = !isNaN(rawEnd);
-                let noEndWidth = isNaN(rawEnd) ? 50 : 0;
-                let stillStaffWidth = !rawEnd && isNaN(beginHopman) ? 50 : 0;
-                let end = isNaN(rawEnd) ? new Date().getFullYear() : rawEnd; // if not ended; take current year
-                let durationHulpStaff = isNaN(beginHulpStaff) ? 0 : beginStaff - beginHulpStaff;
-                let durationStaff = isNaN(beginStaff) ? 0 : (isNaN(beginHopman) ? end - beginStaff : beginHopman - beginStaff);
-                let durationHopman = isNaN(beginHopman) ? 0 : end - beginHopman;
+                var valueToPush = [];
+                for (let j = 0; j <= 4; j++) {
+                    valueToPush[j] = children.children[i].children[j].innerHTML;
+                }
+                staffArray.push(valueToPush);
+            }
+            staffArray.sort(compareColumn);
+
+            // and it is sorted, loop each staff member to display on page
+            for (let i = 0; i < len-1; i++) {
+                console.log(staffArray[i]);
+                let name = staffArray[i][0];
+                let beginHulpStaff = staffArray[i][1];
+                let beginStaff = staffArray[i][2];
+                let beginHopman = staffArray[i][3];
+                let rawEnd = staffArray[i][4];
+                let begin = Math.min(beginHulpStaff === "" ? Infinity : beginHulpStaff,
+                    beginStaff === "" ? Infinity : beginStaff, beginHopman === "" ? Infinity : beginHopman);
+                let ended = rawEnd !== "";
+                let noEndWidth = rawEnd === "" ? 50 : 0;
+                let stillStaffWidth = !rawEnd && beginHopman === "" ? 50 : 0;
+                let end = rawEnd === "" ? new Date().getFullYear() : rawEnd; // if not ended; take current year
+                let durationHulpStaff = beginHulpStaff === "" ? 0 : beginStaff - beginHulpStaff;
+                let durationStaff = beginStaff === "" ? 0 : (beginHopman === "" ? end - beginStaff : beginHopman - beginStaff);
+                let durationHopman = beginHopman === "" ? 0 : end - beginHopman;
 
                 let div = document.createElement("div");
                 div.classList.add("staff-member");
@@ -226,11 +253,13 @@
                                     `var(--staff-color) ${(durationHulpStaff)*100}px, var(--staff-color) ${(durationHulpStaff + durationStaff)*100+stillStaffWidth}px,\n` +
                                     `var(--hopman-color) ${(durationHulpStaff + durationStaff)*100+stillStaffWidth}px, var(--hopman-color) ${(durationHulpStaff + durationStaff + durationHopman)*100}px);`;
 
+                // add image
                 let img = document.createElement("img");
                 img.classList.add("staff-member__image");
                 img.src = `src/${name}.jpg`;
                 img.alt = `${name}`;
                 div.append(img);
+
                 let span = document.createElement("span");
                 if (ended) {
                     span.append(`${name} (${begin} - ${end})`);
@@ -240,7 +269,7 @@
                 div.append(span);
 
                 // create the tooltip, but only if the duration is more than 5 years
-                if (durationHulpStaff + durationStaff + durationHopman > 1) {
+                if (durationHulpStaff + durationStaff + durationHopman > 5) {
                     let tooltip = document.createElement("span");
                     tooltip.classList.add("staff-member__tooltip");
                     let titleText = '';
