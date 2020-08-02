@@ -16,7 +16,7 @@
         }
 
         #source-table { /* only show the source table when editing the page */
-            //display: none;
+            display: none;
         }
         #era {
             border: 1px solid black;
@@ -97,201 +97,197 @@
     </style>
 </head>
 <body>
+    <div id="wikipage-inner">
+        <p>Klik op "Edit" van deze pagina om de stafleden en jaartallen aan te passen. Voeg afbeeldingen toe in <a href="../../../browse/#view=ViewFolder&param=era">deze folder</a>.</p>
 
-    <p>Klik op "Edit" om de stafleden en jaartallen aan te passen.</p>
-
-    <!-- The source table -->
-    <table id="source-table" style="width: 600px;">
-        <tbody>
-        <tr>
-            <td><strong>Staflid</strong></td>
-            <td><strong>Hulpvaandrig sinds</strong></td>
-            <td><strong>Vaandrig sinds</strong></td>
-            <td><strong>Hopman sinds</strong></td>
-            <td><strong>Eindjaar</strong></td>
-        </tr>
-        <tr>
-            <td>Guido</td>
-            <td></td>
-            <td>2002</td>
-            <td></td>
-            <td>2008</td>
-        </tr>
-        <tr>
-            <td>Ewout</td>
-            <td></td>
-            <td>2002</td>
-            <td>2003</td>
-            <td>2010</td>
-        </tr>
-        <tr>
-            <td>Peter</td>
-            <td></td>
-            <td>2003</td>
-            <td></td>
-            <td>2007</td>
-        </tr>
-        <tr>
-            <td>Tineke</td>
-            <td></td>
-            <td>2004</td>
-            <td></td>
-            <td>2007</td>
-        </tr>
-        <tr>
-            <td>Sijmen</td>
-            <td></td>
-            <td>2005</td>
-            <td>2010</td>
-            <td>2015</td>
-        </tr>
-        <tr>
-            <td>Jelle</td>
-            <td></td>
-            <td>2006</td>
-            <td></td>
-            <td>2009</td>
-        </tr>
-        <tr>
-            <td>Carola</td>
-            <td></td>
-            <td>2006</td>
-            <td></td>
-            <td>2010</td>
-        </tr>
-        <tr>
-            <td>Rowan</td>
-            <td></td>
-            <td>2010</td>
-            <td></td>
-            <td>2016</td>
-        </tr>
-        <tr>
-            <td>Marco</td>
-            <td></td>
-            <td>2010</td>
-            <td></td>
-            <td>2011</td>
-        </tr>
-        <tr>
-            <td>Yannick</td>
-            <td></td>
-            <td>2010</td>
-            <td></td>
-            <td>2011</td>
-        </tr>
-        <tr>
-            <td>Robin</td>
-            <td>2010</td>
-            <td>2011</td>
-            <td></td>
-            <td>2020</td>
-        </tr>
-        <tr>
-            <td>Wilco</td>
-            <td>2010</td>
-            <td>2011</td>
-            <td>2015</td>
-            <td>2020</td>
-        </tr>
-        <tr>
-            <td>Wesley</td>
-            <td></td>
-            <td>2011</td>
-            <td></td>
-            <td>2013</td>
-        </tr>
-        <tr>
-            <td>Sander</td>
-            <td></td>
-            <td>2015</td>
-            <td></td>
-            <td>2016</td>
-        </tr>
-        <tr>
-            <td>Kevin</td>
-            <td></td>
-            <td>2012</td>
-            <td></td>
-            <td>2013</td>
-        </tr>
-        <tr>
-            <td>Sarah</td>
-            <td></td>
-            <td>2012</td>
-            <td></td>
-            <td>2013</td>
-        </tr>
-        <tr>
-            <td>Marnix</td>
-            <td></td>
-            <td>2014</td>
-            <td></td>
-            <td></td>
-        </tr>
-        <tr>
-            <td>Leon</td>
-            <td></td>
-            <td>2013</td>
-            <td>2020</td>
-            <td></td>
-        </tr>
-        <tr>
-            <td>Rik</td>
-            <td></td>
-            <td>2015</td>
-            <td></td>
-            <td>2019</td>
-        </tr>
-        <tr>
-            <td>Jeroen</td>
-            <td>2017</td>
-            <td>2018</td>
-            <td></td>
-            <td>2020</td>
-        </tr>
-        <tr>
-            <td>Martijn</td>
-            <td>2018</td>
-            <td>2019</td>
-            <td></td>
-            <td></td>
-        </tr>
-        <tr>
-            <td>Niamh</td>
-            <td>2018</td>
-            <td>2019</td>
-            <td></td>
-            <td></td>
-        </tr>
-        <tr>
-            <td>Daan</td>
-            <td>2019</td>
-            <td>2020</td>
-            <td></td>
-            <td></td>
-        </tr>
-        <tr>
-            <td>Thé</td>
-            <td>2019</td>
-            <td>2020</td>
-            <td></td>
-            <td></td>
-        </tr>
-        <tr>
-            <td>Tinka</td>
-            <td>2019</td>
-            <td>2020</td>
-            <td></td>
-            <td></td>
-        </tr>
-        </tbody>
-    </table>
-
-    <hr>
-
-    <!-- The Era section -->
-    <p id="era"></p>
+        <!-- The source table -->
+        <table id="source-table" style="width: 600px;">
+            <tbody>
+            <tr>
+                <td><strong>Staflid</strong></td>
+                <td><strong>Hulpvaandrig sinds</strong></td>
+                <td><strong>Vaandrig sinds</strong></td>
+                <td><strong>Hopman sinds</strong></td>
+                <td><strong>Eindjaar</strong></td>
+            </tr>
+            <tr>
+                <td>Guido</td>
+                <td></td>
+                <td>2002</td>
+                <td></td>
+                <td>2008</td>
+            </tr>
+            <tr>
+                <td>Ewout</td>
+                <td></td>
+                <td>2002</td>
+                <td>2003</td>
+                <td>2010</td>
+            </tr>
+            <tr>
+                <td>Peter</td>
+                <td></td>
+                <td>2003</td>
+                <td></td>
+                <td>2007</td>
+            </tr>
+            <tr>
+                <td>Tineke</td>
+                <td></td>
+                <td>2004</td>
+                <td></td>
+                <td>2007</td>
+            </tr>
+            <tr>
+                <td>Sijmen</td>
+                <td></td>
+                <td>2005</td>
+                <td>2010</td>
+                <td>2015</td>
+            </tr>
+            <tr>
+                <td>Jelle</td>
+                <td></td>
+                <td>2006</td>
+                <td></td>
+                <td>2009</td>
+            </tr>
+            <tr>
+                <td>Carola</td>
+                <td></td>
+                <td>2006</td>
+                <td></td>
+                <td>2010</td>
+            </tr>
+            <tr>
+                <td>Rowan</td>
+                <td></td>
+                <td>2010</td>
+                <td></td>
+                <td>2016</td>
+            </tr>
+            <tr>
+                <td>Marco</td>
+                <td></td>
+                <td>2010</td>
+                <td></td>
+                <td>2011</td>
+            </tr>
+            <tr>
+                <td>Yannick</td>
+                <td></td>
+                <td>2010</td>
+                <td></td>
+                <td>2011</td>
+            </tr>
+            <tr>
+                <td>Robin</td>
+                <td>2010</td>
+                <td>2011</td>
+                <td></td>
+                <td>2020</td>
+            </tr>
+            <tr>
+                <td>Wilco</td>
+                <td>2010</td>
+                <td>2011</td>
+                <td>2015</td>
+                <td>2020</td>
+            </tr>
+            <tr>
+                <td>Wesley</td>
+                <td></td>
+                <td>2011</td>
+                <td></td>
+                <td>2013</td>
+            </tr>
+            <tr>
+                <td>Sander</td>
+                <td></td>
+                <td>2015</td>
+                <td></td>
+                <td>2016</td>
+            </tr>
+            <tr>
+                <td>Kevin</td>
+                <td></td>
+                <td>2012</td>
+                <td></td>
+                <td>2013</td>
+            </tr>
+            <tr>
+                <td>Sarah</td>
+                <td></td>
+                <td>2012</td>
+                <td></td>
+                <td>2013</td>
+            </tr>
+            <tr>
+                <td>Marnix</td>
+                <td></td>
+                <td>2014</td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>Leon</td>
+                <td></td>
+                <td>2013</td>
+                <td>2020</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>Rik</td>
+                <td></td>
+                <td>2015</td>
+                <td></td>
+                <td>2019</td>
+            </tr>
+            <tr>
+                <td>Jeroen</td>
+                <td>2017</td>
+                <td>2018</td>
+                <td></td>
+                <td>2020</td>
+            </tr>
+            <tr>
+                <td>Martijn</td>
+                <td>2018</td>
+                <td>2019</td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>Niamh</td>
+                <td>2018</td>
+                <td>2019</td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>Daan</td>
+                <td>2019</td>
+                <td>2020</td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>Thé</td>
+                <td>2019</td>
+                <td>2020</td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>Tinka</td>
+                <td>2019</td>
+                <td>2020</td>
+                <td></td>
+                <td></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
 
     <!-- Since the platform does not allow larger script tags, it is split -->
     <script>
@@ -362,94 +358,109 @@
                 return (beginA < beginB) ? -1 : 1; // no change
             }
         }
-    </script>
-    <script>
+
         // show the entire timeline of the era
         function showEra() {
             let minYear = getMinYear();
             let maxYear = getMaxYear();
             let staffArray = getStaff();
 
-            document.getElementById("era").style.width = (maxYear - minYear + 1)*100 + "px";
+            // add era div
+            let page = document.getElementById('wikipage-inner');
+            let sourceTable = document.getElementById('source-table');
+            let eraDiv = document.createElement("div");
+            eraDiv.classList.add("era");
+            eraDiv.style.width = (maxYear - minYear + 1) * 100 + "px";
 
             // show legend
             for (let i = minYear; i <= maxYear; i++) {
                 let div = document.createElement("div");
                 div.classList.add("legend");
                 div.append(`${i}`);
-                document.getElementById("era").append(div);
+                eraDiv.append(div);
             }
 
             // loop each staff member to display on page
             for (let i = 0; i < staffArray.length; i++) {
-                let name = staffArray[i][0];
-                let beginHulpStaff = staffArray[i][1], beginStaff = staffArray[i][2];
-                let beginHopman = staffArray[i][3], rawEnd = staffArray[i][4];
-                let begin = Math.min(beginHulpStaff === "" ? Infinity : beginHulpStaff,
-                    beginStaff === "" ? Infinity : beginStaff, beginHopman === "" ? Infinity : beginHopman);
-                let ended = rawEnd !== "";
-                let noEndWidth = rawEnd === "" ? 50 : 0;
-                let stillStaffWidth = !rawEnd && beginHopman === "" ? 50 : 0;
-                let end = rawEnd === "" ? new Date().getFullYear() : rawEnd; // if not ended; take current year
-                let durationHulpStaff = beginHulpStaff === "" ? 0 : beginStaff - beginHulpStaff;
-                let durationStaff = beginStaff === "" ? 0 : (beginHopman === "" ? end - beginStaff : beginHopman - beginStaff);
-                let durationHopman = beginHopman === "" ? 0 : end - beginHopman;
-
-                // add the div
-                let div = document.createElement("div");
-                div.classList.add("staff-member");
-                if (!ended) div.classList.add("staff-member--no-end"); // for currently still active staff
-                div.style.cssText = `margin-left: ${(begin-minYear)*100+50}px;` +
-                                    `width: ${(end-begin)*100-50+noEndWidth}px;` +
-                                    `background: linear-gradient(to right, var(--hulpstaff-color), var(--hulpstaff-color) ${(durationHulpStaff)*100}px,\n` +
-                                    `var(--staff-color) ${(durationHulpStaff)*100}px, var(--staff-color) ${(durationHulpStaff + durationStaff)*100+stillStaffWidth}px,\n` +
-                                    `var(--hopman-color) ${(durationHulpStaff + durationStaff)*100+stillStaffWidth}px, var(--hopman-color) ${(durationHulpStaff + durationStaff + durationHopman)*100}px);`;
-                // add image
-                let img = document.createElement("img");
-                img.classList.add("staff-member__image");
-                img.src = `src/${name}.jpg`;
-                img.alt = `${name}`;
-                div.append(img);
-
-                // add text
-                let span = document.createElement("span");
-                span.append(`${name}`);
-                if (begin+1 != end) {
-                    if (ended) {
-                        span.append(` (${begin} - ${end})`);
-                    } else { // only show begin year when no yet ended
-                        span.append(` (${begin})`);
-                    }
-                }
-                div.append(span);
-
-                // add tooltip, but only if the duration is more than 5 years
-                if (durationHulpStaff + durationStaff + durationHopman > 5) {
-                    let tooltip = document.createElement("span");
-                    tooltip.classList.add("staff-member__tooltip");
-                    let titleText = '';
-                    if (durationHulpStaff > 0) titleText = titleText.concat(`${durationHulpStaff} jaar hulpstaf`);
-                    if (durationHulpStaff > 0 && durationStaff > 0) titleText = titleText.concat(`, `);
-                    if (durationStaff > 0) {
-                        if (!rawEnd && beginHopman === '') { // still staff
-                            titleText = titleText.concat(`al ${durationStaff} jaar staflid`);
-                        } else {
-                            titleText = titleText.concat(`${durationStaff} jaar staflid`);
-                        }
-                    }
-                    if (durationStaff > 0 && beginHopman !== '') titleText = titleText.concat(`, `);
-                    if (beginHopman !== '') {
-                        if (!rawEnd) { // still hopman
-                            titleText = titleText.concat(`al ${durationHopman} jaar hopman`);
-                        } else {
-                            titleText = titleText.concat(`${durationHopman} jaar hopman`);
-                        }
-                    }
-                    tooltip.append(titleText);
-                    div.append(tooltip);
-                }
-                document.getElementById("era").append(div);
+                eraDiv.append(showStaffMember(staffArray[i], minYear));
             }
+
+            page.append(eraDiv);
+        }
+    </script>
+
+    <!-- Second section -->
+    <script>
+        // show a single staff member
+        function showStaffMember(staffArray, minYear) {
+            console.log("staffArray: " + staffArray);
+            let name = staffArray[0];
+            let beginHulpStaff = staffArray[1], beginStaff = staffArray[2];
+            let beginHopman = staffArray[3], rawEnd = staffArray[4];
+            let begin = Math.min(beginHulpStaff === "" ? Infinity : beginHulpStaff,
+                beginStaff === "" ? Infinity : beginStaff, beginHopman === "" ? Infinity : beginHopman);
+            let ended = rawEnd !== "";
+            let noEndWidth = rawEnd === "" ? 50 : 0;
+            let stillStaffWidth = !rawEnd && beginHopman === "" ? 50 : 0;
+            let end = rawEnd === "" ? new Date().getFullYear() : rawEnd; // if not ended; take current year
+            let durationHulpStaff = beginHulpStaff === "" ? 0 : beginStaff - beginHulpStaff;
+            let durationStaff = beginStaff === "" ? 0 : (beginHopman === "" ? end - beginStaff : beginHopman - beginStaff);
+            let durationHopman = beginHopman === "" ? 0 : end - beginHopman;
+
+            // add the div
+            let staffDiv = document.createElement("div");
+            staffDiv.classList.add("staff-member");
+            if (!ended) staffDiv.classList.add("staff-member--no-end"); // for currently still active staff
+            staffDiv.style.cssText = `margin-left: ${(begin-minYear)*100+50}px;` +
+                                `width: ${(end-begin)*100-50+noEndWidth}px;` +
+                                `background: linear-gradient(to right, var(--hulpstaff-color), var(--hulpstaff-color) ${(durationHulpStaff)*100}px,\n` +
+                                `var(--staff-color) ${(durationHulpStaff)*100}px, var(--staff-color) ${(durationHulpStaff + durationStaff)*100+stillStaffWidth}px,\n` +
+                                `var(--hopman-color) ${(durationHulpStaff + durationStaff)*100+stillStaffWidth}px, var(--hopman-color) ${(durationHulpStaff + durationStaff + durationHopman)*100}px);`;
+            // add image
+            let img = document.createElement("img");
+            img.classList.add("staff-member__image");
+            img.src = `src/${name}.jpg`;
+            img.alt = `${name}`;
+            staffDiv.append(img);
+
+            // add text
+            let span = document.createElement("span");
+            span.append(`${name}`);
+            if (begin+1 != end) {
+                if (ended) {
+                    span.append(` (${begin} - ${end})`);
+                } else { // only show begin year when no yet ended
+                    span.append(` (${begin})`);
+                }
+            }
+            staffDiv.append(span);
+
+            // add tooltip, but only if the duration is more than 5 years
+            if (durationHulpStaff + durationStaff + durationHopman > 5) {
+                let tooltip = document.createElement("span");
+                tooltip.classList.add("staff-member__tooltip");
+                let titleText = '';
+                if (durationHulpStaff > 0) titleText = titleText.concat(`${durationHulpStaff} jaar hulpstaf`);
+                if (durationHulpStaff > 0 && durationStaff > 0) titleText = titleText.concat(`, `);
+                if (durationStaff > 0) {
+                    if (!rawEnd && beginHopman === '') { // still staff
+                        titleText = titleText.concat(`al ${durationStaff} jaar staflid`);
+                    } else {
+                        titleText = titleText.concat(`${durationStaff} jaar staflid`);
+                    }
+                }
+                if (durationStaff > 0 && beginHopman !== '') titleText = titleText.concat(`, `);
+                if (beginHopman !== '') {
+                    if (!rawEnd) { // still hopman
+                        titleText = titleText.concat(`al ${durationHopman} jaar hopman`);
+                    } else {
+                        titleText = titleText.concat(`${durationHopman} jaar hopman`);
+                    }
+                }
+                tooltip.append(titleText);
+                staffDiv.append(tooltip);
+            }
+            return staffDiv;
         }
 
         showEra();
