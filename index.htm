@@ -173,7 +173,8 @@
                 let begin = Math.min(isNaN(beginHulpStaff) ? Infinity : beginHulpStaff,
                     isNaN(beginStaff) ? Infinity : beginStaff, isNaN(beginHopman) ? Infinity : beginHopman);
                 let end = parseInt(children.children[i].children[4].innerHTML);
-                let noEnd = isNaN(end) ? 50 : 0;
+                let ended = !isNaN(end);
+                let noEndWidth = isNaN(end) ? 50 : 0;
                 end = isNaN(end) ? new Date().getFullYear() : end; // if not ended; take current year
                 let durationHulpStaff = isNaN(beginHulpStaff) ? 0 : beginStaff - beginHulpStaff;
                 let durationStaff = isNaN(beginStaff) ? 0 : (isNaN(beginHopman) ? end - beginStaff + 1 : beginHopman - beginStaff);
@@ -181,13 +182,17 @@
 
                 let div = document.createElement("div");
                 div.classList.add("staff-member");
-                if (noEnd !== 0) div.classList.add("no-end");
+                if (!ended) div.classList.add("no-end");
                 div.style.cssText = `margin-left: ${(begin-minYear)*100+50}px;` +
-                                    `width: ${(end-begin)*100-30+noEnd}px;` +
+                                    `width: ${(end-begin)*100-30+noEndWidth}px;` +
                                     `background: linear-gradient(to right, var(--hulpstaff-color), var(--hulpstaff-color) ${(durationHulpStaff)*100}px,\n` +
                                     `var(--staff-color) ${(durationHulpStaff)*100}px, var(--staff-color) ${(durationHulpStaff + durationStaff)*100}px,\n` +
                                     `var(--hopman-color) ${(durationHulpStaff + durationStaff)*100}px, var(--hopman-color) ${(durationHulpStaff + durationStaff + durationHopman)*100}px);`;
-                div.append(`${name} (${begin} - ${end})`);
+                if (ended) {
+                    div.append(`${name} (${begin} - ${end})`);
+                } else { // only show begin year when no yet ended
+                    div.append(`${name} (${begin})`);
+                }
                 document.getElementById("era").append(div);
             }
         }
