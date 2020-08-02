@@ -11,6 +11,8 @@
             --hulpstaff-color: #FEE9A0;
             --staff-color: #fccf2d;
             --hopman-color: #ffb700;
+            --column-color: #F4F4F4;
+            --heading-color: grey;
         }
 
         #source-table { /* only show the source table when editing the page */
@@ -18,16 +20,19 @@
         }
         #era {
             border: 1px solid black;
-            background: repeating-linear-gradient(to right, white, white 100px, #F4F4F4 100px, #F4F4F4 200px);
+            background: repeating-linear-gradient(to right, white, white 100px, var(--column-color) 100px, var(--column-color) 200px);
          }
         .legend {
             position: relative;
             display: inline-block;
-            width: 94px;
+            width: 100px;
             background-color: lightgrey;
             font-weight: 700;
+            font-size: 20px;
             text-align: center;
-            border: 3px solid black;
+        }
+        .legend:nth-child(even) {
+            background-color: var(--heading-color);
         }
         .staff-member {
             position: relative;
@@ -92,6 +97,8 @@
     </style>
 </head>
 <body>
+
+    <p>Klik op "Edit" om de stafleden en jaartallen aan te passen.</p>
 
     <!-- The source table -->
     <table id="source-table" style="width: 600px;">
@@ -283,8 +290,8 @@
 
     <hr>
 
-    <!-- The Era div -->
-    <div id="era"></div>
+    <!-- The Era section -->
+    <p id="era"></p>
 
     <!-- Since the platform does not allow larger script tags, it is split -->
     <script>
@@ -344,10 +351,9 @@
 
         // to allow sorting on the starting column
         function compareColumn(a, b) {
-            if (a[2] === b[2]) {
+            if (a[2] === b[2]) { // begin year
                 return 0;
-            }
-            else {
+            } else {
                 return (a[2] < b[2]) ? -1 : 1;
             }
         }
@@ -357,6 +363,7 @@
         function showEra() {
             let minYear = getMinYear();
             let maxYear = getMaxYear();
+            let staffArray = getStaff();
 
             document.getElementById("era").style.width = (maxYear - minYear + 1)*100 + "px";
 
@@ -368,16 +375,11 @@
                 document.getElementById("era").append(div);
             }
 
-            // get all staff members, and sort them
-            let staffArray = getStaff();
-
-            // and it is sorted, loop each staff member to display on page
+            // loop each staff member to display on page
             for (let i = 0; i < staffArray.length; i++) {
                 let name = staffArray[i][0];
-                let beginHulpStaff = staffArray[i][1];
-                let beginStaff = staffArray[i][2];
-                let beginHopman = staffArray[i][3];
-                let rawEnd = staffArray[i][4];
+                let beginHulpStaff = staffArray[i][1], beginStaff = staffArray[i][2];
+                let beginHopman = staffArray[i][3], rawEnd = staffArray[i][4];
                 let begin = Math.min(beginHulpStaff === "" ? Infinity : beginHulpStaff,
                     beginStaff === "" ? Infinity : beginStaff, beginHopman === "" ? Infinity : beginHopman);
                 let ended = rawEnd !== "";
@@ -397,7 +399,6 @@
                                     `background: linear-gradient(to right, var(--hulpstaff-color), var(--hulpstaff-color) ${(durationHulpStaff)*100}px,\n` +
                                     `var(--staff-color) ${(durationHulpStaff)*100}px, var(--staff-color) ${(durationHulpStaff + durationStaff)*100+stillStaffWidth}px,\n` +
                                     `var(--hopman-color) ${(durationHulpStaff + durationStaff)*100+stillStaffWidth}px, var(--hopman-color) ${(durationHulpStaff + durationStaff + durationHopman)*100}px);`;
-
                 // add image
                 let img = document.createElement("img");
                 img.classList.add("staff-member__image");
@@ -407,12 +408,13 @@
 
                 // add text
                 let span = document.createElement("span");
-                if (begin+1 == end) {
-                    span.append(`${name}`);
-                } else if (ended) {
-                    span.append(`${name} (${begin} - ${end})`);
-                } else { // only show begin year when no yet ended
-                    span.append(`${name} (${begin})`);
+                span.append(`${name}`);
+                if (begin+1 != end) {
+                    if (ended) {
+                        span.append(` (${begin} - ${end})`);
+                    } else { // only show begin year when no yet ended
+                        span.append(` (${begin})`);
+                    }
                 }
                 div.append(span);
 
