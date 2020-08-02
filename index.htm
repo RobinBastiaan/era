@@ -351,10 +351,15 @@
 
         // to allow sorting on the starting column
         function compareColumn(a, b) {
-            if (a[2] === b[2]) { // begin year
-                return 0;
+            let beginA = a[1] ? a[1] : a[2], beginB = b[1] ? b[1] : b[2];
+            if (beginA === beginB) { // begin year
+                if (a[4] === b[4]) { // end year
+                    return 0;
+                } else {
+                    return (a[4] < b[4]) ? -1 : 1; // no change
+                }
             } else {
-                return (a[2] < b[2]) ? -1 : 1;
+                return (beginA < beginB) ? -1 : 1; // no change
             }
         }
     </script>
