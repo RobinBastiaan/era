@@ -18,8 +18,7 @@
         #source-table { /* only show the source table when editing the page */
             display: none;
         }
-        #era {
-            border: 1px solid black;
+        .era {
             background: repeating-linear-gradient(to right, white, white 100px, var(--column-color) 100px, var(--column-color) 200px);
          }
         .legend {
@@ -289,7 +288,7 @@
         </table>
     </div>
 
-    <!-- Since the platform does not allow larger script tags, it is split -->
+    <!-- First Section - since the platform does not allow larger script tags, it is split -->
     <script>
         // get the smallest starting year
         function getMinYear() {
@@ -332,6 +331,7 @@
                 let valueToPush = [];
                 for (let j = 0; j <= 4; j++) {
                     valueToPush[j] = children.children[i].children[j].innerHTML;
+                    if (j > 0) valueToPush[j] = valueToPush[j].replace(/\D/g, ''); // only first column is not a number
                 }
                 let begin = Math.min(valueToPush[1] === "" ? Infinity : valueToPush[1],
                     valueToPush[2] === "" ? Infinity : valueToPush[2], valueToPush[3] === "" ? Infinity : valueToPush[3]);
@@ -344,7 +344,10 @@
             staffArray.sort(compareColumn);
             return staffArray;
         }
+    </script>
 
+    <!-- Second Section -->
+    <script>
         // to allow sorting on the starting column
         function compareColumn(a, b) {
             let beginA = a[1] ? a[1] : a[2], beginB = b[1] ? b[1] : b[2];
@@ -387,13 +390,20 @@
 
             page.append(eraDiv);
         }
+
+        // check if image exists
+        function imageExists(image_url){
+            var http = new XMLHttpRequest();
+            http.open('HEAD', image_url, false);
+            http.send();
+            return http.status != 404;
+        }
     </script>
 
-    <!-- Second section -->
+    <!-- Third Section -->
     <script>
         // show a single staff member
         function showStaffMember(staffArray, minYear) {
-            console.log("staffArray: " + staffArray);
             let name = staffArray[0];
             let beginHulpStaff = staffArray[1], beginStaff = staffArray[2];
             let beginHopman = staffArray[3], rawEnd = staffArray[4];
@@ -419,7 +429,7 @@
             // add image
             let img = document.createElement("img");
             img.classList.add("staff-member__image");
-            img.src = `src/${name}.jpg`;
+            img.src = imageExists(`/f/${name}.jpg`) ? `/f/${name}.jpg` : `src/${name}.jpg`; // PBworks or localhost
             img.alt = `${name}`;
             staffDiv.append(img);
 
