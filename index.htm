@@ -20,6 +20,7 @@
             border: 1px solid black;
          }
         .legend {
+            position: relative;
             display: inline-block;
             width: 94px;
             background-color: lightgrey;
@@ -28,10 +29,25 @@
             border: 3px solid black;
         }
         .staff-member {
+            position: relative;
             padding: 10px 15px;
             margin: 5px;
             border-radius: 15px;
             font-weight: 700;
+        }
+        .no-end {
+            border-radius: 15px 0 0 15px;
+        }
+        .no-end:after {
+            content: "";
+            height: 100%;
+            margin-top: -10px;
+            position: absolute;
+            z-index: 1;
+            width: 50px;
+            right: 0;
+            opacity: 1;
+            background: linear-gradient(to right, rgba(255, 255, 255, 0), rgba(255, 255, 255, 1));
         }
     </style>
 </head>
@@ -154,14 +170,17 @@
                 let begin = Math.min(isNaN(beginHulpStaff) ? Infinity : beginHulpStaff,
                     isNaN(beginStaff) ? Infinity : beginStaff, isNaN(beginHopman) ? Infinity : beginHopman);
                 let end = parseInt(children.children[i].children[4].innerHTML);
+                let noEnd = isNaN(end) ? 50 : 0;
                 end = isNaN(end) ? new Date().getFullYear() : end; // if not ended; take current year
                 let durationHulpStaff = isNaN(beginHulpStaff) ? 0 : beginStaff - beginHulpStaff;
                 let durationStaff = isNaN(beginStaff) ? 0 : (isNaN(beginHopman) ? end - beginStaff + 1 : beginHopman - beginStaff);
                 let durationHopman = isNaN(beginHopman) ? 0 : end - beginHopman + 1;
+
                 let div = document.createElement("div");
                 div.classList.add("staff-member");
+                if (noEnd !== 0) div.classList.add("no-end");
                 div.style.cssText = `margin-left: ${(begin-minYear)*100+50}px;` +
-                                    `width: ${(end-begin)*100-30}px;` +
+                                    `width: ${(end-begin)*100-30+noEnd}px;` +
                                     `background: linear-gradient(to right, var(--hulpstaff-color), var(--hulpstaff-color) ${(durationHulpStaff)*100}px,\n` +
                                     `var(--staff-color) ${(durationHulpStaff)*100}px, var(--staff-color) ${(durationHulpStaff + durationStaff)*100}px,\n` +
                                     `var(--hopman-color) ${(durationHulpStaff + durationStaff)*100}px, var(--hopman-color) ${(durationHulpStaff + durationStaff + durationHopman)*100}px);`;
