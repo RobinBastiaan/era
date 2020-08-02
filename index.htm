@@ -13,7 +13,7 @@
             --hopman-color: #ffb700;
         }
 
-        #source-table { // only show the source table when editing the page
+        #source-table { /* only show the source table when editing the page */
             //display: none;
         }
         #era {
@@ -39,6 +39,7 @@
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
+            clear: both;
             transition: .2s;
         }
         .staff-member:hover {
@@ -72,6 +73,20 @@
         .staff-member:hover .staff-member__image {
             width: 38px;
             margin: -8px -40px;
+        }
+        .staff-member__tooltip {
+            display: none;
+            position: relative;
+            width: 120px;
+            background-color: black;
+            color: #fff;
+            text-align: center;
+            border-radius: 6px;
+            padding: 5px;
+            margin-left: 5px;
+        }
+        .staff-member:hover .staff-member__tooltip {
+            display: inline;
         }
     </style>
 </head>
@@ -193,22 +208,24 @@
                 let beginHopman = parseInt(children.children[i].children[3].innerHTML);
                 let begin = Math.min(isNaN(beginHulpStaff) ? Infinity : beginHulpStaff,
                     isNaN(beginStaff) ? Infinity : beginStaff, isNaN(beginHopman) ? Infinity : beginHopman);
-                let end = parseInt(children.children[i].children[4].innerHTML);
-                let ended = !isNaN(end);
-                let noEndWidth = isNaN(end) ? 50 : 0;
-                end = isNaN(end) ? new Date().getFullYear() : end; // if not ended; take current year
+                let rawEnd = parseInt(children.children[i].children[4].innerHTML);
+                let ended = !isNaN(rawEnd);
+                let noEndWidth = isNaN(rawEnd) ? 50 : 0;
+                let stillStaffWidth = !rawEnd && isNaN(beginHopman) ? 50 : 0;
+                let end = isNaN(rawEnd) ? new Date().getFullYear() : rawEnd; // if not ended; take current year
                 let durationHulpStaff = isNaN(beginHulpStaff) ? 0 : beginStaff - beginHulpStaff;
-                let durationStaff = isNaN(beginStaff) ? 0 : (isNaN(beginHopman) ? end - beginStaff + 1 : beginHopman - beginStaff);
-                let durationHopman = isNaN(beginHopman) ? 0 : end - beginHopman + 1;
+                let durationStaff = isNaN(beginStaff) ? 0 : (isNaN(beginHopman) ? end - beginStaff : beginHopman - beginStaff);
+                let durationHopman = isNaN(beginHopman) ? 0 : end - beginHopman;
 
                 let div = document.createElement("div");
                 div.classList.add("staff-member");
                 if (!ended) div.classList.add("staff-member--no-end");
                 div.style.cssText = `margin-left: ${(begin-minYear)*100+50}px;` +
-                                    `width: ${(end-begin)*100-30+noEndWidth}px;` +
+                                    `width: ${(end-begin)*100-50+noEndWidth}px;` +
                                     `background: linear-gradient(to right, var(--hulpstaff-color), var(--hulpstaff-color) ${(durationHulpStaff)*100}px,\n` +
-                                    `var(--staff-color) ${(durationHulpStaff)*100}px, var(--staff-color) ${(durationHulpStaff + durationStaff)*100}px,\n` +
-                                    `var(--hopman-color) ${(durationHulpStaff + durationStaff)*100}px, var(--hopman-color) ${(durationHulpStaff + durationStaff + durationHopman)*100}px);`;
+                                    `var(--staff-color) ${(durationHulpStaff)*100}px, var(--staff-color) ${(durationHulpStaff + durationStaff)*100+stillStaffWidth}px,\n` +
+                                    `var(--hopman-color) ${(durationHulpStaff + durationStaff)*100+stillStaffWidth}px, var(--hopman-color) ${(durationHulpStaff + durationStaff + durationHopman)*100}px);`;
+
                 let img = document.createElement("img");
                 img.classList.add("staff-member__image");
                 img.src = `src/${name}.jpg`;
@@ -221,6 +238,32 @@
                     span.append(`${name} (${begin})`);
                 }
                 div.append(span);
+
+                // create the tooltip, but only if the duration is more than 5 years
+                if (durationHulpStaff + durationStaff + durationHopman > 1) {
+                    let tooltip = document.createElement("span");
+                    tooltip.classList.add("staff-member__tooltip");
+                    let titleText = '';
+                    if (durationHulpStaff > 0) titleText = titleText.concat(`${durationHulpStaff} jaar hulpstaf`);
+                    if (durationHulpStaff > 0 && durationStaff > 0) titleText = titleText.concat(`, `);
+                    if (durationStaff > 0) {
+                        if (!rawEnd && isNaN(beginHopman)) { // still staff
+                            titleText = titleText.concat(`al ${durationStaff} jaar staflid`);
+                        } else {
+                            titleText = titleText.concat(`${durationStaff} jaar staflid`);
+                        }
+                    }
+                    if (durationStaff > 0 && !isNaN(beginHopman)) titleText = titleText.concat(`, `);
+                    if (!isNaN(beginHopman)) {
+                        if (!rawEnd) { // still hopman
+                            titleText = titleText.concat(`al ${durationHopman} jaar hopman`);
+                        } else {
+                            titleText = titleText.concat(`${durationHopman} jaar hopman`);
+                        }
+                    }
+                    tooltip.append(titleText);
+                    div.append(tooltip);
+                }
                 document.getElementById("era").append(div);
             }
         }
