@@ -31,9 +31,9 @@
         .staff-member {
             position: relative;
             height: 18px;
-            padding: 10px 15px;
+            padding: 10px 10px 10px 40px;
             margin: 5px;
-            border-radius: 15px;
+            border-radius: 18px;
             font-size: 16px;
             font-weight: 700;
             white-space: nowrap;
@@ -45,13 +45,13 @@
             height: 22px;
             font-weight: bolder;
             font-size: 19px;
-            padding: 8px 15px;
+            padding: 8px 10px 8px 40px;
             filter: brightness(97%);
         }
-        .no-end {
-            border-radius: 15px 0 0 15px;
+        .staff-member--no-end {
+            border-radius: 18px 0 0 18px;
         }
-        .no-end:after {
+        .staff-member--no-end:after {
             content: "";
             height: 110%;
             margin-top: -10px;
@@ -61,6 +61,17 @@
             right: 0;
             opacity: 1;
             background: linear-gradient(to right, rgba(255, 255, 255, 0), rgba(255, 255, 255, 1));
+        }
+        .staff-member__image {
+            position: absolute;
+            width: 36px;
+            margin: -9px -39px;
+            border-radius: 100%;
+            transition: .2s;
+        }
+        .staff-member:hover .staff-member__image {
+            width: 38px;
+            margin: -8px -40px;
         }
     </style>
 </head>
@@ -192,12 +203,17 @@
 
                 let div = document.createElement("div");
                 div.classList.add("staff-member");
-                if (!ended) div.classList.add("no-end");
+                if (!ended) div.classList.add("staff-member--no-end");
                 div.style.cssText = `margin-left: ${(begin-minYear)*100+50}px;` +
                                     `width: ${(end-begin)*100-30+noEndWidth}px;` +
                                     `background: linear-gradient(to right, var(--hulpstaff-color), var(--hulpstaff-color) ${(durationHulpStaff)*100}px,\n` +
                                     `var(--staff-color) ${(durationHulpStaff)*100}px, var(--staff-color) ${(durationHulpStaff + durationStaff)*100}px,\n` +
                                     `var(--hopman-color) ${(durationHulpStaff + durationStaff)*100}px, var(--hopman-color) ${(durationHulpStaff + durationStaff + durationHopman)*100}px);`;
+                let img = document.createElement("img");
+                img.classList.add("staff-member__image");
+                img.src = `src/${name}.jpg`;
+                img.alt = `${name}`;
+                div.append(img);
                 let span = document.createElement("span");
                 if (ended) {
                     span.append(`${name} (${begin} - ${end})`);
