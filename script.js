@@ -102,9 +102,9 @@
     }
 
     // check if image exists
-    function imageExists(image_url){
+    function imageExists(imageUrl){
         var http = new XMLHttpRequest();
-        http.open('HEAD', image_url, false);
+        http.open('HEAD', imageUrl, false);
         http.send();
         return http.status != 404;
     }
