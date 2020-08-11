@@ -46,8 +46,7 @@
             let begin = Math.min(valueToPush[1] === "" ? Infinity : valueToPush[1],
                 valueToPush[2] === "" ? Infinity : valueToPush[2], valueToPush[3] === "" ? Infinity : valueToPush[3]);
             if ((valueToPush[1] || valueToPush[2] || valueToPush[3]) && // only if some years are entered
-                (begin < valueToPush[4]
-                || valueToPush[4] === '')) { // and did not staff for 0 years
+                (begin < valueToPush[4] || valueToPush[4] === '')) { // and did not staff for 0 years
                 staffArray.push(valueToPush);
             }
         }
@@ -131,11 +130,11 @@
         let staffDiv = document.createElement("div");
         staffDiv.classList.add("staff-member");
         if (!ended) staffDiv.classList.add("staff-member--no-end"); // for currently still active staff
-        staffDiv.style.cssText = `margin-left: ${(begin-minYear)*100+50}px;` +
-                            `width: ${(end-begin)*100-50+noEndWidth}px;` +
-                            `background: linear-gradient(to right, var(--hulpstaff-color), var(--hulpstaff-color) ${(durationHulpStaff)*100}px,\n` +
-                            `var(--staff-color) ${(durationHulpStaff)*100}px, var(--staff-color) ${(durationHulpStaff + durationStaff)*100+stillStaffWidth}px,\n` +
-                            `var(--hopman-color) ${(durationHulpStaff + durationStaff)*100+stillStaffWidth}px, var(--hopman-color) ${(durationHulpStaff + durationStaff + durationHopman)*100}px);`;
+        staffDiv.style.cssText = `margin-left: ${(begin - minYear) * 100 + 50}px;` +
+            `width: ${(end - begin) * 100 - 50 + noEndWidth}px;` +
+            `background: linear-gradient(to right, var(--hulpstaff-color), var(--hulpstaff-color) ${(durationHulpStaff) * 100}px,\n` +
+            `var(--staff-color) ${(durationHulpStaff) * 100}px, var(--staff-color) ${(durationHulpStaff + durationStaff) * 100 + stillStaffWidth}px,\n` +
+            `var(--hopman-color) ${(durationHulpStaff + durationStaff) * 100 + stillStaffWidth}px, var(--hopman-color) ${(durationHulpStaff + durationStaff + durationHopman) * 100}px);`;
         // add image
         let img = document.createElement("img");
         img.classList.add("staff-member__image");
@@ -146,7 +145,7 @@
         // add text
         let span = document.createElement("span");
         span.append(`${name}`);
-        if (begin+1 != end) {
+        if (begin + 1 != end) {
             if (ended) {
                 span.append(` (${begin} - ${end})`);
             } else { // only show begin year when no yet ended
@@ -183,5 +182,8 @@
         return staffDiv;
     }
 
-    showEra();
+    window.addEventListener('DOMContentLoaded', function() {
+        showEra();
+        document.getElementById("loading-gif").style.display = 'none';
+    });
 //</script>
