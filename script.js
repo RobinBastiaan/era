@@ -60,14 +60,16 @@
     // to allow sorting on the starting column
     function compareColumn(a, b) {
         let beginA = a[1] ? a[1] : a[2], beginB = b[1] ? b[1] : b[2];
-        if (beginA === beginB) { // begin year
-            if (a[4] === b[4]) { // end year
-                return 0;
-            } else {
-                return (a[4] < b[4]) ? -1 : 1; // no change
-            }
-        } else {
-            return (beginA < beginB) ? -1 : 1; // no change
+        if (beginA !== beginB) { // first started member first
+            return (beginA < beginB) ? -1 : 1;
+        } else if (!a[4]) { // not stopped member last
+            return 1;
+        } else if (!b[4]) { // not stopped member last
+            return -1;
+        } else if (a[4] === b[4]) { // same end year; no change
+            return 0;
+        } else { // first stopped member first
+            return (a[4] < b[4]) ? -1 : 1;
         }
     }
 
