@@ -161,22 +161,18 @@
             let tooltip = document.createElement("span");
             tooltip.classList.add("staff-member__tooltip");
             let titleText = '';
-            if (durationHulpStaff > 0) titleText = titleText.concat(`${durationHulpStaff} jaar hulpstaf`);
-            if (durationHulpStaff > 0 && durationStaff > 0) titleText = titleText.concat(`, `);
-            if (durationStaff > 0) {
-                if (!rawEnd && beginHopman === '') { // still staff
-                    titleText = titleText.concat(`al ${durationStaff} jaar staflid`);
-                } else {
-                    titleText = titleText.concat(`${durationStaff} jaar staflid`);
-                }
+            if (durationHulpStaff > 0) {
+                titleText = titleText.concat(`${durationHulpStaff} jaar hulpstaf`);
+                if (durationStaff > 0) titleText = titleText.concat(`, `);
             }
-            if (durationStaff > 0 && beginHopman !== '') titleText = titleText.concat(`, `);
+            if (durationStaff > 0) {
+                let still = (!rawEnd && beginHopman === '') ? 'al ' : ''; // still staff indicator
+                titleText = titleText.concat(`${still}${durationStaff} jaar staflid`);
+            }
             if (beginHopman !== '') {
-                if (!rawEnd) { // still hopman
-                    titleText = titleText.concat(`al ${durationHopman} jaar hopman`);
-                } else {
-                    titleText = titleText.concat(`${durationHopman} jaar hopman`);
-                }
+                if (durationStaff > 0) titleText = titleText.concat(`, `);
+                let still = (!rawEnd) ? 'al ' : ''; // still hopman indicator
+                titleText = titleText.concat(`${still}${durationHopman} jaar hopman`);
             }
             tooltip.append(titleText);
             staffDiv.append(tooltip);
