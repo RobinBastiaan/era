@@ -124,7 +124,7 @@
         let noEndWidth = rawEnd === "" ? 50 : 0;
         let stillStaffWidth = !rawEnd && beginHopman === "" ? 50 : 0;
         let end = rawEnd === "" ? new Date().getFullYear() : rawEnd; // if not ended; take current year
-        let durationHulpStaff = beginHulpStaff === "" ? 0 : beginStaff - beginHulpStaff;
+        let durationHulpStaff = beginHulpStaff === "" ? 0 : (beginStaff === "" ? end - beginStaff : beginStaff - beginHulpStaff);
         let durationStaff = beginStaff === "" ? 0 : (beginHopman === "" ? end - beginStaff : beginHopman - beginStaff);
         let durationHopman = beginHopman === "" ? 0 : end - beginHopman;
 
