@@ -39,7 +39,7 @@
     transition: .2s;
 }
 .staff-member:hover {
-    height: 22px;
+    /*height: 22px;*/
     font-weight: bolder;
     font-size: 19px;
     padding: 8px 10px 8px 40px;
