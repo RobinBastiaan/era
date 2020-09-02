@@ -115,9 +115,7 @@
 //<script>
     // show a single staff member
     function showStaffMember(staffArray, minYear) {
-        let name = staffArray[0];
-        let beginHulpStaff = staffArray[1], beginStaff = staffArray[2];
-        let beginHopman = staffArray[3], rawEnd = staffArray[4];
+        let [name, beginHulpStaff, beginStaff, beginHopman, rawEnd] = staffArray;
         let begin = Math.min(beginHulpStaff === "" ? Infinity : beginHulpStaff,
             beginStaff === "" ? Infinity : beginStaff, beginHopman === "" ? Infinity : beginHopman);
         let ended = rawEnd !== "";
