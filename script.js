@@ -90,7 +90,7 @@ function imageExists(imageUrl){
     var http = new XMLHttpRequest();
     http.open('HEAD', imageUrl, false);
     http.send();
-    return http.status != 404;
+    return http.status !== 404;
 }
 //</script>
 
@@ -128,7 +128,7 @@ function showStaffMember(staffArray, minYear) {
     // add text
     let span = document.createElement("span");
     span.append(`${name}`);
-    if (begin + 1 != end) {
+    if (begin + 1 !== end) { // do not add years to text if only just started, and thus no space
         if (ended) {
             span.append(` (${begin} - ${end})`);
         } else { // only show begin year when no yet ended
