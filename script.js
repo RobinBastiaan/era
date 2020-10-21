@@ -4,6 +4,16 @@
 let minYear = new Date().getFullYear(); //getMinYear();
 let maxYear = new Date().getFullYear(); //getMaxYear();
 
+class StaffMember {
+    constructor(name, helpYear, staffYear, leaderYear, lastYear) {
+        this.name = name;
+        this.helpYear = helpYear;
+        this.staffYear = staffYear;
+        this.leaderYear = leaderYear;
+        this.lastYear = lastYear;
+    }
+}
+
 // get all staff members, and sort them
 function getStaff() {
     let children = document.getElementById("source-table").children[0];
@@ -19,34 +29,34 @@ function getStaff() {
             valueToPush[2] === "" ? Infinity : valueToPush[2], valueToPush[3] === "" ? Infinity : valueToPush[3]);
         if ((valueToPush[1] || valueToPush[2] || valueToPush[3]) && // only if some years are entered
             (begin < valueToPush[4] || valueToPush[4] === '')) { // and did not staff for 0 years
-            staffArray.push(valueToPush);
+            let staffMember = new StaffMember(...valueToPush);
+            staffArray.push(staffMember);
         }
 
         minYear = (valueToPush[3] && valueToPush[3] < minYear) ? valueToPush[3] : minYear;
         maxYear = (valueToPush[4] && valueToPush[4] > maxYear) ? valueToPush[4] : maxYear;
     }
-    staffArray.sort(compareColumn);
+
+    staffArray.sort(function(a, b) {
+        let beginYearA = a.helpYear ? a.helpYear : a.staffYear, beginYearB = b.helpYear ? b.helpYear : b.staffYear;
+        if (beginYearA !== beginYearB) { // first started member first
+            return (beginYearA < beginYearB) ? -1 : 1;
+        } else if (!a.lastYear) { // not stopped member last
+            return 1;
+        } else if (!b.lastYear) { // not stopped member last
+            return -1;
+        } else if (a.lastYear === b.lastYear) { // same end year; no change
+            return 0;
+        } else { // first stopped member first
+            return (a.lastYear < b.lastYear) ? -1 : 1;
+        }
+    });
     return staffArray;
 }
 //</script>
 
 <!-- Second Section -->
 //<script>
-// to allow sorting on the starting column
-function compareColumn(a, b) {
-    let beginA = a[1] ? a[1] : a[2], beginB = b[1] ? b[1] : b[2];
-    if (beginA !== beginB) { // first started member first
-        return (beginA < beginB) ? -1 : 1;
-    } else if (!a[4]) { // not stopped member last
-        return 1;
-    } else if (!b[4]) { // not stopped member last
-        return -1;
-    } else if (a[4] === b[4]) { // same end year; no change
-        return 0;
-    } else { // first stopped member first
-        return (a[4] < b[4]) ? -1 : 1;
-    }
-}
 
 // show the entire timeline of the era
 function showEra() {
@@ -88,16 +98,16 @@ function imageExists(imageUrl){
 //<script>
 // show a single staff member
 function showStaffMember(staffArray, minYear) {
-    let [name, beginHulpStaff, beginStaff, beginHopman, rawEnd] = staffArray;
-    let begin = Math.min(beginHulpStaff === "" ? Infinity : beginHulpStaff,
-        beginStaff === "" ? Infinity : beginStaff, beginHopman === "" ? Infinity : beginHopman);
-    let ended = rawEnd !== "";
-    let noEndWidth = rawEnd === "" ? 50 : 0;
-    let stillStaffWidth = !rawEnd && beginHopman === "" ? 50 : 0;
-    let end = rawEnd === "" ? new Date().getFullYear() : rawEnd; // if not ended; take current year
-    let durationHulpStaff = beginHulpStaff === "" ? 0 : (beginStaff === "" ? end - beginStaff : beginStaff - beginHulpStaff);
-    let durationStaff = beginStaff === "" ? 0 : (beginHopman === "" ? end - beginStaff : beginHopman - beginStaff);
-    let durationHopman = beginHopman === "" ? 0 : end - beginHopman;
+    let {name, helpYear, staffYear, leaderYear, lastYear} = staffArray;
+    let begin = Math.min(helpYear === "" ? Infinity : helpYear,
+        staffYear === "" ? Infinity : staffYear, leaderYear === "" ? Infinity : leaderYear);
+    let ended = lastYear !== "";
+    let noEndWidth = lastYear === "" ? 50 : 0;
+    let stillStaffWidth = !lastYear && leaderYear === "" ? 50 : 0;
+    let end = lastYear === "" ? new Date().getFullYear() : lastYear; // if not ended; take current year
+    let durationHulpStaff = helpYear === "" ? 0 : (staffYear === "" ? end - staffYear : staffYear - helpYear);
+    let durationStaff = staffYear === "" ? 0 : (leaderYear === "" ? end - staffYear : leaderYear - staffYear);
+    let durationHopman = leaderYear === "" ? 0 : end - leaderYear;
 
     // add the div
     let staffDiv = document.createElement("div");
@@ -137,12 +147,12 @@ function showStaffMember(staffArray, minYear) {
             if (durationStaff > 0) titleText = titleText.concat(`, `);
         }
         if (durationStaff > 0) {
-            let still = (!rawEnd && beginHopman === '') ? 'al ' : ''; // still staff indicator
+            let still = (!lastYear && leaderYear === '') ? 'al ' : ''; // still staff indicator
             titleText = titleText.concat(`${still}${durationStaff} jaar staflid`);
         }
-        if (beginHopman !== '') {
+        if (leaderYear !== '') {
             if (durationStaff > 0) titleText = titleText.concat(`, `);
-            let still = (!rawEnd) ? 'al ' : ''; // still hopman indicator
+            let still = (!lastYear) ? 'al ' : ''; // still hopman indicator
             titleText = titleText.concat(`${still}${durationHopman} jaar hopman`);
         }
         tooltip.append(titleText);
