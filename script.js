@@ -1,6 +1,5 @@
 <!-- First Section - since the platform does not allow larger script tags, it is split -->
 //<script>
-
 let minYear = new Date().getFullYear(); //getMinYear();
 let maxYear = new Date().getFullYear(); //getMaxYear();
 
@@ -57,7 +56,6 @@ function getStaff() {
 
 <!-- Second Section -->
 //<script>
-
 // show the entire timeline of the era
 function showEra() {
     let staffArray = getStaff();
@@ -83,6 +81,7 @@ function showEra() {
     }
 
     page.append(eraDiv);
+    document.getElementById("loading-gif").style.display = 'none';
 }
 
 // check if image exists
@@ -162,7 +161,6 @@ function showStaffMember(staffArray, minYear) {
 }
 
 window.addEventListener('DOMContentLoaded', function() {
-    showEra();
-    document.getElementById("loading-gif").style.display = 'none';
+    setTimeout(showEra, 0);
 });
 //</script>
