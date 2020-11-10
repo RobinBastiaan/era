@@ -52,10 +52,7 @@ function getStaff() {
     });
     return staffArray;
 }
-//</script>
 
-<!-- Second Section -->
-//<script>
 // show the entire timeline of the era
 function showEra() {
     let staffArray = getStaff();
@@ -85,7 +82,7 @@ function showEra() {
 }
 //</script>
 
-<!-- Third Section -->
+<!-- Second Section -->
 //<script>
 // show a single staff member
 function showStaffMember(staffArray, minYear) {
