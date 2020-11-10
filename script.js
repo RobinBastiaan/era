@@ -83,14 +83,6 @@ function showEra() {
     page.append(eraDiv);
     document.getElementById("loading-gif").style.display = 'none';
 }
-
-// check if image exists
-function imageExists(imageUrl){
-    var http = new XMLHttpRequest();
-    http.open('HEAD', imageUrl, false);
-    http.send();
-    return http.status !== 404;
-}
 //</script>
 
 <!-- Third Section -->
@@ -120,7 +112,7 @@ function showStaffMember(staffArray, minYear) {
     // add image
     let img = document.createElement("img");
     img.classList.add("staff-member__image");
-    img.src = imageExists(`/f/${name}.jpg`) ? `/f/${name}.jpg` : `src/${name}.jpg`; // PBworks or localhost
+    img.src = `/f/${name}.jpg`; // PBworks: `/f/${name}.jpg or localhost: `src/${name}.jpg`
     img.alt = `${name}`;
     staffDiv.append(img);
 
