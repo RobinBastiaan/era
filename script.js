@@ -1,7 +1,7 @@
 <!-- First Section - since the platform does not allow larger script tags, it is split -->
 //<script>
-let minYear = new Date().getFullYear(); //getMinYear();
-let maxYear = new Date().getFullYear(); //getMaxYear();
+let minYear = new Date().getFullYear();
+let maxYear = new Date().getFullYear();
 
 class StaffMember {
     constructor(name, helpYear, staffYear, leaderYear, lastYear) {
@@ -18,6 +18,7 @@ function getStaff() {
     let children = document.getElementById("source-table").children[0];
     let len = children.childElementCount;
     let staffArray = [];
+
     for (let i = 1; i < len; i++) {
         let valueToPush = [];
         for (let j = 0; j <= 4; j++) {
@@ -36,7 +37,7 @@ function getStaff() {
         maxYear = (valueToPush[4] && valueToPush[4] > maxYear) ? valueToPush[4] : maxYear;
     }
 
-    staffArray.sort(function(a, b) {
+    staffArray.sort(function (a, b) {
         let beginYearA = a.helpYear ? a.helpYear : a.staffYear, beginYearB = b.helpYear ? b.helpYear : b.staffYear;
         if (beginYearA !== beginYearB) { // first started member first
             return (beginYearA < beginYearB) ? -1 : 1;
@@ -59,7 +60,6 @@ function showEra() {
 
     // add era div
     let page = document.getElementById('wikipage-inner');
-    let sourceTable = document.getElementById('source-table');
     let eraDiv = document.createElement("div");
     eraDiv.classList.add("era");
     eraDiv.style.width = (maxYear - minYear + 1) * 100 + "px";
@@ -80,6 +80,7 @@ function showEra() {
     page.append(eraDiv);
     document.getElementById("loading-gif").style.display = 'none';
 }
+
 //</script>
 
 <!-- Second Section -->
@@ -93,9 +94,9 @@ function showStaffMember(staffArray, minYear) {
     let noEndWidth = lastYear === "" ? 50 : 0;
     let stillStaffWidth = !lastYear && leaderYear === "" ? 50 : 0;
     let end = lastYear === "" ? new Date().getFullYear() : lastYear; // if not ended; take current year
-    let durationHulpStaff = helpYear === "" ? 0 : (staffYear === "" ? end - staffYear : staffYear - helpYear);
+    let durationHelpStaff = helpYear === "" ? 0 : (staffYear === "" ? end - staffYear : staffYear - helpYear);
     let durationStaff = staffYear === "" ? 0 : (leaderYear === "" ? end - staffYear : leaderYear - staffYear);
-    let durationHopman = leaderYear === "" ? 0 : end - leaderYear;
+    let durationTeamLeader = leaderYear === "" ? 0 : end - leaderYear;
 
     // add the div
     let staffDiv = document.createElement("div");
@@ -103,9 +104,9 @@ function showStaffMember(staffArray, minYear) {
     if (!ended) staffDiv.classList.add("staff-member--no-end"); // for currently still active staff
     staffDiv.style.cssText = `margin-left: ${(begin - minYear) * 100 + 50}px;` +
         `width: ${(end - begin) * 100 - 50 + noEndWidth}px;` +
-        `background: linear-gradient(to right, var(--hulpstaff-color), var(--hulpstaff-color) ${(durationHulpStaff) * 100}px,\n` +
-        `var(--staff-color) ${(durationHulpStaff) * 100}px, var(--staff-color) ${(durationHulpStaff + durationStaff) * 100 + stillStaffWidth}px,\n` +
-        `var(--hopman-color) ${(durationHulpStaff + durationStaff) * 100 + stillStaffWidth}px, var(--hopman-color) ${(durationHulpStaff + durationStaff + durationHopman) * 100}px);`;
+        `background: linear-gradient(to right, var(--helpstaff-color), var(--helpstaff-color) ${(durationHelpStaff) * 100}px,\n` +
+        `var(--staff-color) ${(durationHelpStaff) * 100}px, var(--staff-color) ${(durationHelpStaff + durationStaff) * 100 + stillStaffWidth}px,\n` +
+        `var(--teamleader-color) ${(durationHelpStaff + durationStaff) * 100 + stillStaffWidth}px, var(--teamleader-color) ${(durationHelpStaff + durationStaff + durationTeamLeader) * 100}px);`;
     // add image
     let img = document.createElement("img");
     img.classList.add("staff-member__image");
@@ -126,12 +127,12 @@ function showStaffMember(staffArray, minYear) {
     staffDiv.append(span);
 
     // add tooltip, but only if the duration is more than 5 years
-    if (durationHulpStaff + durationStaff + durationHopman > 5) {
+    if (durationHelpStaff + durationStaff + durationTeamLeader > 5) {
         let tooltip = document.createElement("span");
         tooltip.classList.add("staff-member__tooltip");
         let titleText = '';
-        if (durationHulpStaff > 0) {
-            titleText = titleText.concat(`${durationHulpStaff} jaar hulpstaf`);
+        if (durationHelpStaff > 0) {
+            titleText = titleText.concat(`${durationHelpStaff} jaar hulpstaf`);
             if (durationStaff > 0) titleText = titleText.concat(`, `);
         }
         if (durationStaff > 0) {
@@ -141,7 +142,7 @@ function showStaffMember(staffArray, minYear) {
         if (leaderYear !== '') {
             if (durationStaff > 0) titleText = titleText.concat(`, `);
             let still = (!lastYear) ? 'al ' : ''; // still hopman indicator
-            titleText = titleText.concat(`${still}${durationHopman} jaar hopman`);
+            titleText = titleText.concat(`${still}${durationTeamLeader} jaar hopman`);
         }
         tooltip.append(titleText);
         staffDiv.append(tooltip);
@@ -149,7 +150,7 @@ function showStaffMember(staffArray, minYear) {
     return staffDiv;
 }
 
-window.addEventListener('DOMContentLoaded', function() {
+window.addEventListener('DOMContentLoaded', function () {
     setTimeout(showEra, 0);
 });
 //</script>

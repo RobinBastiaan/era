@@ -1,11 +1,10 @@
 :root {
-    --hulpstaff-color: #FEE9A0;
+    --helpstaff-color: #FEE9A0;
     --staff-color: #fccf2d;
-    --hopman-color: #ffb700;
+    --teamleader-color: #ffb700;
     --column-color: #F4F4F4;
     --heading-color: grey;
 }
-
 #source-table { /* only show the source table when editing the page */
     display: none;
 }
