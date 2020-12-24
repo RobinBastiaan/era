@@ -10,6 +10,7 @@
 }
 .era {
     background: repeating-linear-gradient(to right, white, white 100px, var(--column-color) 100px, var(--column-color) 200px);
+    color: #444;
 }
 .legend {
     position: relative;
