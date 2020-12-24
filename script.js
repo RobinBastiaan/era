@@ -98,7 +98,7 @@ function showStaffMember(staffArray, minYear) {
     let durationStaff = staffYear === "" ? 0 : (leaderYear === "" ? end - staffYear : leaderYear - staffYear);
     let durationTeamLeader = leaderYear === "" ? 0 : end - leaderYear;
 
-    // add the div
+    // add div
     let staffDiv = document.createElement("div");
     staffDiv.classList.add("staff-member");
     if (!ended) staffDiv.classList.add("staff-member--no-end"); // for currently still active staff
@@ -107,6 +107,7 @@ function showStaffMember(staffArray, minYear) {
         `background: linear-gradient(to right, var(--helpstaff-color), var(--helpstaff-color) ${(durationHelpStaff) * 100}px,\n` +
         `var(--staff-color) ${(durationHelpStaff) * 100}px, var(--staff-color) ${(durationHelpStaff + durationStaff) * 100 + stillStaffWidth}px,\n` +
         `var(--teamleader-color) ${(durationHelpStaff + durationStaff) * 100 + stillStaffWidth}px, var(--teamleader-color) ${(durationHelpStaff + durationStaff + durationTeamLeader) * 100}px);`;
+
     // add image
     let img = document.createElement("img");
     img.classList.add("staff-member__image");
@@ -117,7 +118,7 @@ function showStaffMember(staffArray, minYear) {
     // add text
     let span = document.createElement("span");
     span.append(`${name}`);
-    if (begin + 1 !== end) { // do not add years to text if only just started, and thus no space
+    if (end - begin > 2) { // do not add years to text if only just started or only few years staff; and thus no space
         if (ended) {
             span.append(` (${begin} - ${end})`);
         } else { // only show begin year when no yet ended
