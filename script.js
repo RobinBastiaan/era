@@ -94,7 +94,7 @@ function showStaffMember(staffArray, minYear) {
     let noEndWidth = lastYear === "" ? 50 : 0;
     let stillStaffWidth = !lastYear && leaderYear === "" ? 50 : 0;
     let end = lastYear === "" ? new Date().getFullYear() : lastYear; // if not ended; take current year
-    let durationHelpStaff = helpYear === "" ? 0 : (staffYear === "" ? end - staffYear : staffYear - helpYear);
+    let durationHelpStaff = helpYear === "" ? 0 : (staffYear === "" ? end - helpYear : staffYear - helpYear);
     let durationStaff = staffYear === "" ? 0 : (leaderYear === "" ? end - staffYear : leaderYear - staffYear);
     let durationTeamLeader = leaderYear === "" ? 0 : end - leaderYear;
 
