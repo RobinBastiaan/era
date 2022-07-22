@@ -1,4 +1,17 @@
 :root {
+    /**
+     * Change these colors for easy portability to other (PBworks) color themes. Currently a YELLOW-THEME is used.
+     *
+     * Example GREEN-THEME:
+     * - helpstaff-color: #DEEFD1
+     * - staff-color: #8BBF76
+     * - teamleader-color: #5FA644
+     *
+     * Example RED-THEME:
+     * - helpstaff-color: #FAC4C3
+     * - staff-color: #D66666
+     * - teamleader-color: #B72025
+     */
     --helpstaff-color: #FEE9A0;
     --staff-color: #fccf2d;
     --teamleader-color: #ffb700;
