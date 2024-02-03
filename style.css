@@ -18,9 +18,15 @@
     --column-color: #F4F4F4;
     --heading-color: grey;
 }
+
+input {
+    accent-color: white;
+}
+
 #source-table { /* only show the source table when editing the page */
     display: none;
 }
+
 .era {
     background: repeating-linear-gradient(to right, white, white 100px, var(--column-color) 100px, var(--column-color) 200px);
     color: #444;
@@ -37,6 +43,7 @@
 .legend:nth-child(even) {
     background-color: var(--heading-color);
 }
+
 .staff-member {
     position: relative;
     height: 18px;

@@ -14,6 +14,11 @@
     <div id="wikipage-inner">
         <p>Klik op "Edit" van deze pagina om de stafleden en jaartallen aan te passen. Voeg afbeeldingen toe in <a href="../../../browse/#view=ViewFolder&param=era">deze folder</a>.</p>
 
+        <label class="label-checkbox">
+            <input class="hidden-checkbox" type="checkbox" name="show_only_leader" onchange="showEra()">
+            Toon alleen teamleiders
+        </label>
+
         <!-- The source table -->
         <table id="source-table" style="width: 600px;">
             <tbody>
@@ -358,6 +363,8 @@
 
         <!-- Loading gif -->
         <img id="loading-gif" src="src/loading.gif" alt="" style="margin-left: 150px">
+
+        <div id="era-result"></div>
     </div>
 </body>
 </html>

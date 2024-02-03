@@ -56,10 +56,11 @@ function getStaff() {
 
 // show the entire timeline of the era
 function showEra() {
+    let showOnlyLeaders = document.querySelector('input[name=show_only_leader]').checked;
     let staffArray = getStaff();
 
     // add era div
-    let page = document.getElementById('wikipage-inner');
+    let eraResult = document.getElementById('era-result');
     let eraDiv = document.createElement("div");
     eraDiv.classList.add("era");
     eraDiv.style.width = (maxYear - minYear + 1) * 100 + "px";
@@ -74,13 +75,17 @@ function showEra() {
 
     // loop each staff member to display on page
     for (let i = 0; i < staffArray.length; i++) {
+        if (showOnlyLeaders && ! staffArray[i]['leaderYear']) {
+            continue;
+        }
+
         eraDiv.append(showStaffMember(staffArray[i], minYear));
     }
 
-    page.append(eraDiv);
+    eraResult.innerHTML = '';
+    eraResult.append(eraDiv);
     document.getElementById("loading-gif").style.display = 'none';
 }
-
 //</script>
 
 <!-- Second Section -->
