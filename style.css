@@ -15,8 +15,10 @@
     --helpstaff-color: #FEE9A0;
     --staff-color: #fccf2d;
     --teamleader-color: #ffb700;
+
     --column-color: #F4F4F4;
     --heading-color: grey;
+    --text-color: #444;
 }
 
 input {
@@ -99,4 +101,38 @@ input {
 }
 .staff-member:hover .staff-member__tooltip {
     display: inline;
+}
+
+#era__filters {
+    position: relative;
+    margin: 60px auto 20px;
+    padding: 0;
+    max-width: 520px;
+    overflow: hidden;
+    color: var(--text-color);
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    border-radius: 10px;
+}
+
+.era__filter-section {
+    padding: 10px;
+    min-width: 310px;
+    background: var(--column-color);
+    flex-grow: 1;
+    text-align: center;
+}
+
+#era__footer {
+    font-weight: lighter;
+    font-style: italic;
+    font-size: x-small;
+    margin: 30px 10px 10px;
+    text-align: right;
+}
+
+#era__footer a {
+    text-decoration: none !important;
+    color: var(--text-color);
 }

@@ -57,6 +57,7 @@ function getStaff() {
 // show the entire timeline of the era
 function showEra() {
     let showOnlyLeaders = document.querySelector('input[name=show_only_leader]').checked;
+    let showOnlyActive = document.querySelector('input[name=show_only_active]').checked;
     let staffArray = getStaff();
 
     // add era div
@@ -76,6 +77,10 @@ function showEra() {
     // loop each staff member to display on page
     for (let i = 0; i < staffArray.length; i++) {
         if (showOnlyLeaders && ! staffArray[i]['leaderYear']) {
+            continue;
+        }
+
+        if (showOnlyActive && staffArray[i]['lastYear']) {
             continue;
         }
 
@@ -116,7 +121,7 @@ function showStaffMember(staffArray, minYear) {
     // add image
     let img = document.createElement("img");
     img.classList.add("staff-member__image");
-    img.src = `/f/${name}.jpg`; // PBworks: `/f/${name}.jpg or localhost: `src/${name}.jpg`
+    img.src = `/src/${name}.jpg`; // PBworks: `/f/${name}.jpg or localhost: `src/${name}.jpg`
     img.alt = `${name}`;
     staffDiv.append(img);
 

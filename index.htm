@@ -14,11 +14,6 @@
     <div id="wikipage-inner">
         <p>Klik op "Edit" van deze pagina om de stafleden en jaartallen aan te passen. Voeg afbeeldingen toe in <a href="../../../browse/#view=ViewFolder&param=era">deze folder</a>.</p>
 
-        <label class="label-checkbox">
-            <input class="hidden-checkbox" type="checkbox" name="show_only_leader" onchange="showEra()">
-            Toon alleen teamleiders
-        </label>
-
         <!-- The source table -->
         <table id="source-table" style="width: 600px;">
             <tbody>
@@ -364,7 +359,29 @@
         <!-- Loading gif -->
         <img id="loading-gif" src="src/loading.gif" alt="" style="margin-left: 150px">
 
+        <!-- Begin Main -->
+        <!-- Part 1: The following code needs to be placed in a plugin area, to avoid issues with PBWorks removing properties and elements. -->
+        <article id="era__filters">
+            <section class="era__filter-section">
+                <label class="label-checkbox">
+                    <input class="hidden-checkbox" type="checkbox" name="show_only_leader" onchange="showEra()">
+                    Toon alleen teamleiders
+                </label>
+
+                <label class="label-checkbox">
+                    <input class="hidden-checkbox" type="checkbox" name="show_only_active" onchange="showEra()">
+                    Toon alleen actieve leven
+                </label>
+            </section>
+        </article>
+
         <div id="era-result"></div>
+
+        <div id="era__footer"><a href="https://github.com/RobinBastiaan/era">
+            <img class="vertical-align" alt="Github" title="Project op Github als RobinBastiaan/era" src="src/github-mark.svg">
+            <span>Gemaakt door Robin</span>
+        </a></div>
+        <!-- End Part 1 -->
     </div>
 </body>
 </html>
