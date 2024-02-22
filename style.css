@@ -25,6 +25,15 @@ input {
     accent-color: white;
 }
 
+img {
+    height: 32px;
+    width: 32px;
+}
+
+.vertical-align {
+    vertical-align: middle;
+}
+
 #source-table { /* only show the source table when editing the page */
     display: none;
 }

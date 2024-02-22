@@ -1,7 +1,5 @@
 <!-- First Section - since the platform does not allow larger script tags, it is split -->
 //<script>
-let minYear = new Date().getFullYear();
-let maxYear = new Date().getFullYear();
 
 class StaffMember {
     constructor(name, helpYear, staffYear, leaderYear, lastYear) {
@@ -16,10 +14,12 @@ class StaffMember {
 // get all staff members, and sort them
 function getStaff() {
     let children = document.getElementById("source-table").children[0];
-    let len = children.childElementCount;
+    let staffCount = children.childElementCount;
     let staffArray = [];
 
-    for (let i = 1; i < len; i++) {
+    //
+    for (let i = 1; i < staffCount; i++) {
+        // validate and format input
         let valueToPush = [];
         for (let j = 0; j <= 4; j++) {
             valueToPush[j] = children.children[i].children[j].innerHTML;
@@ -27,16 +27,18 @@ function getStaff() {
         }
         let begin = Math.min(valueToPush[1] === "" ? Infinity : valueToPush[1],
             valueToPush[2] === "" ? Infinity : valueToPush[2], valueToPush[3] === "" ? Infinity : valueToPush[3]);
-        if ((valueToPush[1] || valueToPush[2] || valueToPush[3]) && // only if some years are entered
-            (begin < valueToPush[4] || valueToPush[4] === '')) { // and did not staff for 0 years
-            let staffMember = new StaffMember(...valueToPush);
-            staffArray.push(staffMember);
+
+        // skip invalid entries
+        if (!(valueToPush[1] || valueToPush[2] || valueToPush[3]) && // only if some years are entered
+            !(begin < valueToPush[4] || valueToPush[4] === '')) { // and did not staff for 0 years
+            continue;
         }
 
-        minYear = (valueToPush[3] && valueToPush[3] < minYear) ? valueToPush[3] : minYear;
-        maxYear = (valueToPush[4] && valueToPush[4] > maxYear) ? valueToPush[4] : maxYear;
+        let staffMember = new StaffMember(...valueToPush);
+        staffArray.push(staffMember);
     }
 
+    // sort the staff
     staffArray.sort(function (a, b) {
         let beginYearA = a.helpYear ? a.helpYear : a.staffYear, beginYearB = b.helpYear ? b.helpYear : b.staffYear;
         if (beginYearA !== beginYearB) { // first started member first
@@ -51,6 +53,7 @@ function getStaff() {
             return (a.lastYear < b.lastYear) ? -1 : 1;
         }
     });
+
     return staffArray;
 }
 
@@ -59,6 +62,25 @@ function showEra() {
     let showOnlyLeaders = document.querySelector('input[name=show_only_leader]').checked;
     let showOnlyActive = document.querySelector('input[name=show_only_active]').checked;
     let staffArray = getStaff();
+    let minYear = new Date().getFullYear();
+    let maxYear = new Date().getFullYear();
+
+    for (let i = 0; i < staffArray.length; i++) {
+        if (showOnlyLeaders && !staffArray[i]['leaderYear']) {
+            continue;
+        }
+
+        if (showOnlyActive && staffArray[i]['lastYear']) {
+            continue;
+        }
+
+        minYear = [minYear, staffArray[i]['helpYear'], staffArray[i]['staffYear'], staffArray[i]['leaderYear']]
+            .filter(Boolean)
+            .reduce((a, b) => Math.min(a, b));
+        maxYear = [maxYear, staffArray[i]['staffYear'], staffArray[i]['leaderYear'], staffArray[i]['lastYear']]
+            .filter(Boolean)
+            .reduce((a, b) => Math.max(a, b));
+    }
 
     // add era div
     let eraResult = document.getElementById('era-result');
