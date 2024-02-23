@@ -1,9 +1,11 @@
 <!-- First Section - since the platform does not allow larger script tags, it is split -->
 //<script>
+let teams = ['bevers', 'leonardus', 'parcival', 'scouts', 'explorers', 'roverscouts', 'stam', 'bestuur'];
 
 class StaffMember {
-    constructor(name, helpYear, staffYear, leaderYear, lastYear) {
+    constructor(name, team, helpYear, staffYear, leaderYear, lastYear) {
         this.name = name;
+        this.team = team;
         this.helpYear = helpYear;
         this.staffYear = staffYear;
         this.leaderYear = leaderYear;
@@ -21,16 +23,20 @@ function getStaff() {
     for (let i = 1; i < staffCount; i++) {
         // validate and format input
         let valueToPush = [];
-        for (let j = 0; j <= 4; j++) {
+        for (let j = 0; j <= 5; j++) {
             valueToPush[j] = children.children[i].children[j].innerHTML;
-            if (j > 0) valueToPush[j] = valueToPush[j].replace(/\D/g, ''); // only first column is not a number
+            if (j === 1) {
+                valueToPush[j] = valueToPush[j].toLowerCase();
+                valueToPush[j] = teams.includes(valueToPush[j]) ? valueToPush[j] : 'default';
+            }
+            if (j > 1) valueToPush[j] = valueToPush[j].replace(/\D/g, ''); // only first two columns are not a number
         }
-        let begin = Math.min(valueToPush[1] === "" ? Infinity : valueToPush[1],
-            valueToPush[2] === "" ? Infinity : valueToPush[2], valueToPush[3] === "" ? Infinity : valueToPush[3]);
+        let begin = Math.min(valueToPush[2] === "" ? Infinity : valueToPush[2],
+            valueToPush[3] === "" ? Infinity : valueToPush[3], valueToPush[4] === "" ? Infinity : valueToPush[4]);
 
         // skip invalid entries
-        if (!(valueToPush[1] || valueToPush[2] || valueToPush[3]) && // only if some years are entered
-            !(begin < valueToPush[4] || valueToPush[4] === '')) { // and did not staff for 0 years
+        if (!(valueToPush[2] || valueToPush[3] || valueToPush[4]) && // only if some years are entered
+            !(begin < valueToPush[5] || valueToPush[5] === '')) { // and did not staff for 0 years
             continue;
         }
 
@@ -40,7 +46,9 @@ function getStaff() {
 
     // sort the staff
     staffArray.sort(function (a, b) {
-        let beginYearA = a.helpYear ? a.helpYear : a.staffYear, beginYearB = b.helpYear ? b.helpYear : b.staffYear;
+        let beginYearA = parseInt([a.helpYear, a.staffYear, a.leaderYear].filter(Boolean).reduce((a, b) => Math.min(a, b))),
+            beginYearB = parseInt([b.helpYear, b.staffYear, b.leaderYear].filter(Boolean).reduce((a, b) => Math.min(a, b)));
+
         if (beginYearA !== beginYearB) { // first started member first
             return (beginYearA < beginYearB) ? -1 : 1;
         } else if (!a.lastYear) { // not stopped member last
@@ -61,16 +69,16 @@ function getStaff() {
 function showEra() {
     let showOnlyLeaders = document.querySelector('input[name=show_only_leader]').checked;
     let showOnlyActive = document.querySelector('input[name=show_only_active]').checked;
+    let showTeams = {};
+    document.querySelectorAll('#teams input[type="checkbox"]').forEach(checkbox => {
+        showTeams[checkbox.name.slice(5)] = checkbox.checked; // remove "show_" part for the name of the checkbox.
+    })
     let staffArray = getStaff();
     let minYear = new Date().getFullYear();
     let maxYear = new Date().getFullYear();
 
     for (let i = 0; i < staffArray.length; i++) {
-        if (showOnlyLeaders && !staffArray[i]['leaderYear']) {
-            continue;
-        }
-
-        if (showOnlyActive && staffArray[i]['lastYear']) {
+        if (!shouldIncludeStaffMember(staffArray[i], showOnlyLeaders, showOnlyActive, showTeams)) {
             continue;
         }
 
@@ -98,11 +106,7 @@ function showEra() {
 
     // loop each staff member to display on page
     for (let i = 0; i < staffArray.length; i++) {
-        if (showOnlyLeaders && ! staffArray[i]['leaderYear']) {
-            continue;
-        }
-
-        if (showOnlyActive && staffArray[i]['lastYear']) {
+        if (!shouldIncludeStaffMember(staffArray[i], showOnlyLeaders, showOnlyActive, showTeams)) {
             continue;
         }
 
@@ -113,13 +117,29 @@ function showEra() {
     eraResult.append(eraDiv);
     document.getElementById("loading-gif").style.display = 'none';
 }
+
+function shouldIncludeStaffMember(staff, showOnlyLeaders, showOnlyActive, showTeams) {
+    if (showOnlyLeaders && !staff['leaderYear']) {
+        return false;
+    }
+
+    if (showOnlyActive && staff['lastYear']) {
+        return false;
+    }
+
+    if (!showTeams[staff['team']]) {
+        return false;
+    }
+
+    return true;
+}
 //</script>
 
 <!-- Second Section -->
 //<script>
 // show a single staff member
 function showStaffMember(staffArray, minYear) {
-    let {name, helpYear, staffYear, leaderYear, lastYear} = staffArray;
+    let {name, team, helpYear, staffYear, leaderYear, lastYear} = staffArray;
     let begin = Math.min(helpYear === "" ? Infinity : helpYear,
         staffYear === "" ? Infinity : staffYear, leaderYear === "" ? Infinity : leaderYear);
     let ended = lastYear !== "";
@@ -136,9 +156,9 @@ function showStaffMember(staffArray, minYear) {
     if (!ended) staffDiv.classList.add("staff-member--no-end"); // for currently still active staff
     staffDiv.style.cssText = `margin-left: ${(begin - minYear) * 100 + 50}px;` +
         `width: ${(end - begin) * 100 - 50 + noEndWidth}px;` +
-        `background: linear-gradient(to right, var(--helpstaff-color), var(--helpstaff-color) ${(durationHelpStaff) * 100}px,\n` +
-        `var(--staff-color) ${(durationHelpStaff) * 100}px, var(--staff-color) ${(durationHelpStaff + durationStaff) * 100 + stillStaffWidth}px,\n` +
-        `var(--teamleader-color) ${(durationHelpStaff + durationStaff) * 100 + stillStaffWidth}px, var(--teamleader-color) ${(durationHelpStaff + durationStaff + durationTeamLeader) * 100}px);`;
+        `background: linear-gradient(to right, var(--${team}-helpstaff-color), var(--${team}-helpstaff-color) ${(durationHelpStaff) * 100}px,\n` +
+        `var(--${team}-staff-color) ${(durationHelpStaff) * 100}px, var(--${team}-staff-color) ${(durationHelpStaff + durationStaff) * 100 + stillStaffWidth}px,\n` +
+        `var(--${team}-teamleader-color) ${(durationHelpStaff + durationStaff) * 100 + stillStaffWidth}px, var(--${team}-teamleader-color) ${(durationHelpStaff + durationStaff + durationTeamLeader) * 100}px);`;
 
     // add image
     let img = document.createElement("img");

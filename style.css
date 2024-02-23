@@ -1,20 +1,34 @@
 :root {
     /**
-     * Change these colors for easy portability to other (PBworks) color themes. Currently a YELLOW-THEME is used.
-     *
-     * Example GREEN-THEME:
-     * - helpstaff-color: #DEEFD1
-     * - staff-color: #8BBF76
-     * - teamleader-color: #5FA644
-     *
-     * Example RED-THEME:
-     * - helpstaff-color: #FAC4C3
-     * - staff-color: #D66666
-     * - teamleader-color: #B72025
+     * Each team has their own color themes.
      */
-    --helpstaff-color: #FEE9A0;
-    --staff-color: #fccf2d;
-    --teamleader-color: #ffb700;
+    --bevers-helpstaff-color: #FFB3D9;
+    --bevers-staff-color: #FF66B3;
+    --bevers-teamleader-color: #FF3385;
+    --leonardus-helpstaff-color: #DEEFD1;
+    --leonardus-staff-color: #8BBF76;
+    --leonardus-teamleader-color: #5FA644;
+    --parcival-helpstaff-color: #DEEFD1;
+    --parcival-staff-color: #8BBF76;
+    --parcival-teamleader-color: #5FA644;
+    --scouts-helpstaff-color: #FEE9A0;
+    --scouts-staff-color: #fccf2d;
+    --scouts-teamleader-color: #ffb700;
+    --explorers-helpstaff-color: #FAC4C3;
+    --explorers-staff-color: #D66666;
+    --explorers-teamleader-color: #B72025;
+    --roverscouts-helpstaff-color: #c49898;
+    --roverscouts-staff-color: #9f4d4d;
+    --roverscouts-teamleader-color: #86171b;
+    --stam-helpstaff-color: #9BA4FF;
+    --stam-staff-color: #5E64FF;
+    --stam-teamleader-color: #2F36FF;
+    --bestuur-helpstaff-color: #FFAF6B;
+    --bestuur-staff-color: #FF7F0E;
+    --bestuur-teamleader-color: #FF5C00;
+    --default-helpstaff-color: #CCCCCC;
+    --default-staff-color: #999999;
+    --default-teamleader-color: #666666;
 
     --column-color: #F4F4F4;
     --heading-color: grey;
@@ -23,11 +37,6 @@
 
 input {
     accent-color: white;
-}
-
-img {
-    height: 32px;
-    width: 32px;
 }
 
 .vertical-align {
@@ -144,4 +153,8 @@ img {
 #era__footer a {
     text-decoration: none !important;
     color: var(--text-color);
+}
+#era__footer img {
+    height: 32px;
+    width: 32px;
 }
