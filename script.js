@@ -194,8 +194,8 @@ function showStaffMember(staffArray, minYear) {
         }
         if (leaderYear !== '') {
             if (durationStaff > 0) titleText = titleText.concat(`, `);
-            let still = (!lastYear) ? 'al ' : ''; // still hopman indicator
-            titleText = titleText.concat(`${still}${durationTeamLeader} jaar hopman`);
+            let still = (!lastYear) ? 'al ' : ''; // still teamleider indicator
+            titleText = titleText.concat(`${still}${durationTeamLeader} jaar teamleader`);
         }
         tooltip.append(titleText);
         staffDiv.append(tooltip);
