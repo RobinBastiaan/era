@@ -75,7 +75,7 @@ function showEra() {
     })
     let staffArray = getStaff();
     let minYear = new Date().getFullYear();
-    let maxYear = new Date().getFullYear();
+    let maxYear = 0;
 
     for (let i = 0; i < staffArray.length; i++) {
         if (!shouldIncludeStaffMember(staffArray[i], showOnlyLeaders, showOnlyActive, showTeams)) {
@@ -164,6 +164,10 @@ function showStaffMember(staffArray, minYear) {
     let img = document.createElement("img");
     img.classList.add("staff-member__image");
     img.src = `/src/${name}.jpg`; // PBworks: `/f/${name}.jpg or localhost: `src/${name}.jpg`
+    img.onerror = function() {
+        this.onerror = null;
+        this.src = "/src/person.jpg"; // PBworks: `/f/${name}.jpg or localhost: `src/${name}.jpg`
+    };
     img.alt = `${name}`;
     staffDiv.append(img);
 
