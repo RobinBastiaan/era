@@ -88,6 +88,7 @@ function showEra() {
         maxYear = [maxYear, staffArray[i]['staffYear'], staffArray[i]['leaderYear'], staffArray[i]['lastYear']]
             .filter(Boolean)
             .reduce((a, b) => Math.max(a, b));
+        maxYear = staffArray[i]['lastYear'] ? maxYear : new Date().getFullYear(); // Take now as last year if still present.
     }
 
     // add era div
