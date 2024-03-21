@@ -10,16 +10,18 @@ class StaffMember {
         this.staffYear = staffYear;
         this.leaderYear = leaderYear;
         this.lastYear = lastYear;
+
+        this.minYear = [helpYear, staffYear, leaderYear].filter(Boolean).reduce((a, b) => Math.min(a, b));
+        this.maxYear = [helpYear, staffYear, leaderYear, lastYear ? lastYear : new Date().getFullYear()].filter(Boolean).reduce((a, b) => Math.max(a, b));
     }
 }
 
-// get all staff members, and sort them
+// Build an array of StaffMembers from table data.
 function getStaff() {
     let children = document.getElementById("source-table").children[0];
     let staffCount = children.childElementCount;
     let staffArray = [];
 
-    //
     for (let i = 1; i < staffCount; i++) {
         // validate and format input
         let valueToPush = [];
@@ -44,8 +46,11 @@ function getStaff() {
         staffArray.push(staffMember);
     }
 
-    // sort the staff
-    staffArray.sort(function (a, b) {
+    return staffArray;
+}
+
+function sortStaffByDate(staffArray) {
+    return staffArray.sort(function (a, b) {
         let beginYearA = parseInt([a.helpYear, a.staffYear, a.leaderYear].filter(Boolean).reduce((a, b) => Math.min(a, b))),
             beginYearB = parseInt([b.helpYear, b.staffYear, b.leaderYear].filter(Boolean).reduce((a, b) => Math.min(a, b)));
 
@@ -61,22 +66,24 @@ function getStaff() {
             return (a.lastYear < b.lastYear) ? -1 : 1;
         }
     });
-
-    return staffArray;
 }
 
 // show the entire timeline of the era
 function showEra() {
     let showOnlyLeaders = document.querySelector('input[name=show_only_leader]').checked;
     let showOnlyActive = document.querySelector('input[name=show_only_active]').checked;
+    let displayCompact = document.querySelector('input[name=display_compact]').checked;
     let showTeams = {};
     document.querySelectorAll('#teams input[type="checkbox"]').forEach(checkbox => {
         showTeams[checkbox.name.slice(5)] = checkbox.checked; // remove "show_" part for the name of the checkbox.
     })
-    let staffArray = getStaff();
+    let staffArray =  sortStaffByDate(getStaff());
     let minYear = new Date().getFullYear();
     let maxYear = 0;
 
+    // calculate the min and max year to display
+    let staffMatrix = [];
+    let staffMatrixYears = [];
     for (let i = 0; i < staffArray.length; i++) {
         if (!shouldIncludeStaffMember(staffArray[i], showOnlyLeaders, showOnlyActive, showTeams)) {
             continue;
@@ -89,6 +96,27 @@ function showEra() {
             .filter(Boolean)
             .reduce((a, b) => Math.max(a, b));
         maxYear = staffArray[i]['lastYear'] ? maxYear : new Date().getFullYear(); // Take now as last year if still present.
+
+        if (displayCompact) {
+            let j = 0;
+            let placeFound = false;
+            while (!placeFound) {
+                if (!staffMatrixYears[j] || staffMatrixYears[j] <= staffArray[i].minYear) {
+                    // Extend the outer array with empty arrays until the index exists.
+                    while (staffMatrix.length <= j) {
+                        staffMatrix.push([]);
+                    }
+
+                    staffMatrix[j].push(staffArray[i]);
+                    staffMatrixYears[j] = staffArray[i].maxYear;
+                    placeFound = true;
+                }
+
+                j++;
+            }
+        } else {
+            staffMatrix.push([staffArray[i]]);
+        }
     }
 
     // add era div
@@ -105,15 +133,7 @@ function showEra() {
         eraDiv.append(div);
     }
 
-    // loop each staff member to display on page
-    for (let i = 0; i < staffArray.length; i++) {
-        if (!shouldIncludeStaffMember(staffArray[i], showOnlyLeaders, showOnlyActive, showTeams)) {
-            continue;
-        }
-
-        eraDiv.append(showStaffMember(staffArray[i], minYear));
-    }
-
+    eraDiv.append(...(displayStaffMembers(staffMatrix, minYear)));
     eraResult.innerHTML = '';
     eraResult.append(eraDiv);
     document.getElementById("loading-gif").style.display = 'none';
@@ -133,6 +153,27 @@ function shouldIncludeStaffMember(staff, showOnlyLeaders, showOnlyActive, showTe
     }
 
     return true;
+}
+
+function displayStaffMembers(staffMatrix, minYear) {
+    let previousYear = minYear;
+    let staffElements = [];
+
+    for (let i = 0; i < staffMatrix.length; i++) {
+        let divLine = document.createElement("div");
+        divLine.style.paddingLeft = "50px";
+
+        for (let j = 0; j < staffMatrix[i].length; j++) {
+            divLine.append(showStaffMember(staffMatrix[i][j], previousYear));
+
+            previousYear = staffMatrix[i][j].maxYear;
+        }
+
+        previousYear = minYear;
+        staffElements.push(divLine);
+    }
+
+    return staffElements;
 }
 //</script>
 
@@ -155,7 +196,7 @@ function showStaffMember(staffArray, minYear) {
     let staffDiv = document.createElement("div");
     staffDiv.classList.add("staff-member");
     if (!ended) staffDiv.classList.add("staff-member--no-end"); // for currently still active staff
-    staffDiv.style.cssText = `margin-left: ${(begin - minYear) * 100 + 50}px;` +
+    staffDiv.style.cssText = `margin-left: ${(begin - minYear) * 100}px;` +
         `width: ${(end - begin) * 100 - 50 + noEndWidth}px;` +
         `background: linear-gradient(to right, var(--${team}-helpstaff-color), var(--${team}-helpstaff-color) ${(durationHelpStaff) * 100}px,\n` +
         `var(--${team}-staff-color) ${(durationHelpStaff) * 100}px, var(--${team}-staff-color) ${(durationHelpStaff + durationStaff) * 100 + stillStaffWidth}px,\n` +
@@ -184,7 +225,7 @@ function showStaffMember(staffArray, minYear) {
     }
     staffDiv.append(span);
 
-    // add tooltip, but only if the duration is more than 5 years
+    // add a tooltip, but only if the duration is more than 5 years
     if (durationHelpStaff + durationStaff + durationTeamLeader > 5) {
         let tooltip = document.createElement("span");
         tooltip.classList.add("staff-member__tooltip");
@@ -200,11 +241,12 @@ function showStaffMember(staffArray, minYear) {
         if (leaderYear !== '') {
             if (durationStaff > 0) titleText = titleText.concat(`, `);
             let still = (!lastYear) ? 'al ' : ''; // still teamleider indicator
-            titleText = titleText.concat(`${still}${durationTeamLeader} jaar teamleader`);
+            titleText = titleText.concat(`${still}${durationTeamLeader} jaar teamleider`);
         }
         tooltip.append(titleText);
         staffDiv.append(tooltip);
     }
+
     return staffDiv;
 }
 
