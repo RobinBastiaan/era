@@ -251,6 +251,10 @@ function showStaffMember(staffArray, minYear) {
 }
 
 window.addEventListener('DOMContentLoaded', function () {
+    if (document.getElementsByClassName('fullwidth').length === 0) {
+        document.getElementById('expand-collapse-page-link')?.click()
+    }
+
     setTimeout(showEra, 0);
 });
 //</script>
