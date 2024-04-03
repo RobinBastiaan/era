@@ -82,10 +82,33 @@ input {
 .staff-member:hover {
     filter: brightness(90%);
 }
-.staff-member--no-end {
+.staff-member__fuzzy-left {
+    border-radius: 0 18px 18px 0;
+}
+.staff-member__fuzzy-right {
     border-radius: 18px 0 0 18px;
 }
-.staff-member--no-end:after {
+.staff-member__fuzzy-both {
+    border-radius: 0 0 0 0;
+}
+.staff-member__fuzzy-left:before,
+.staff-member__fuzzy-both:before {
+    content: "";
+    height: 110%;
+    margin-top: -10px;
+    position: absolute;
+    z-index: 1;
+    width: 50px;
+    left: 0;
+    opacity: 1;
+    background: linear-gradient(to right, rgba(255, 255, 255, 1), rgba(255, 255, 255, 0));
+}
+/* Account for the vertical stripes. */
+.staff-member__fuzzy-left--even:before {
+    background: linear-gradient(to right, rgba(245, 245, 245, 1), rgba(255, 255, 255, 0));
+}
+.staff-member__fuzzy-right:after,
+.staff-member__fuzzy-both:after {
     content: "";
     height: 110%;
     margin-top: -10px;
@@ -95,6 +118,10 @@ input {
     right: 0;
     opacity: 1;
     background: linear-gradient(to right, rgba(255, 255, 255, 0), rgba(255, 255, 255, 1));
+}
+/* Account for the vertical stripes. */
+.staff-member__fuzzy-right--even:after {
+    background: linear-gradient(to right, rgba(255, 255, 255, 0), rgba(245, 245, 245, 1));
 }
 .staff-member__image {
     position: absolute;

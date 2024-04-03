@@ -3,7 +3,7 @@
 let teams = ['bevers', 'leonardus', 'parcival', 'scouts', 'explorers', 'roverscouts', 'stam', 'bestuur'];
 
 class StaffMember {
-    constructor(name, team, themeName, helpYear, staffYear, leaderYear, lastYear) {
+    constructor(name, team, themeName, helpYear, staffYear, leaderYear, lastYear, fuzzyStart, fuzzyEnd) {
         this.name = name;
         this.team = team;
         this.themeName = themeName;
@@ -11,6 +11,8 @@ class StaffMember {
         this.staffYear = staffYear;
         this.leaderYear = leaderYear;
         this.lastYear = lastYear;
+        this.fuzzyStart = fuzzyStart;
+        this.fuzzyEnd = fuzzyEnd;
 
         this.displayName = themeName ? name + ' | ' + themeName : name;
 
@@ -44,6 +46,9 @@ function getStaff() {
             !(begin < valueToPush[6] || valueToPush[6] === '')) { // and did not staff for 0 years
             continue;
         }
+
+        valueToPush.push(children.children[i].children[4].innerHTML.includes('~') || children.children[i].children[5].innerHTML.includes('~'));
+        valueToPush.push(children.children[i].children[6].innerHTML.includes('~'));
 
         let staffMember = new StaffMember(...valueToPush);
         staffArray.push(staffMember);
@@ -184,7 +189,7 @@ function displayStaffMembers(staffMatrix, minYear) {
 //<script>
 // show a single staff member
 function showStaffMember(staffArray, minYear) {
-    let {name, team, displayName, helpYear, staffYear, leaderYear, lastYear} = staffArray;
+    let {name, team, displayName, helpYear, staffYear, leaderYear, lastYear, fuzzyStart, fuzzyEnd} = staffArray;
     let begin = Math.min(helpYear === "" ? Infinity : helpYear,
         staffYear === "" ? Infinity : staffYear, leaderYear === "" ? Infinity : leaderYear);
     let ended = lastYear !== "";
@@ -198,7 +203,25 @@ function showStaffMember(staffArray, minYear) {
     // add div
     let staffDiv = document.createElement("div");
     staffDiv.classList.add("staff-member");
-    if (!ended) staffDiv.classList.add("staff-member--no-end"); // for currently still active staff
+    if (fuzzyStart && fuzzyEnd) {
+        staffDiv.classList.add("staff-member__fuzzy-both");
+        if ((minYear - begin) % 2 !== 0) {
+            staffDiv.classList.add("staff-member__fuzzy-left--even");
+        }
+        if ((minYear - end) % 2 !== 0) {
+            staffDiv.classList.add("staff-member__fuzzy-right--even");
+        }
+    } else if (!ended || fuzzyEnd) { // for currently still active staff
+        staffDiv.classList.add("staff-member__fuzzy-right");
+        if ((minYear - end) % 2 !== 0) {
+            staffDiv.classList.add("staff-member__fuzzy-right--even");
+        }
+    } else if (fuzzyStart) {
+        staffDiv.classList.add("staff-member__fuzzy-left");
+        if ((minYear - begin) % 2 !== 0) {
+            staffDiv.classList.add("staff-member__fuzzy-left--even");
+        }
+    }
     staffDiv.style.cssText = `margin-left: ${(begin - minYear) * 100}px;` +
         `width: ${(end - begin) * 100 - 50 + noEndWidth}px;` +
         `background: linear-gradient(to right, var(--${team}-helpstaff-color), var(--${team}-helpstaff-color) ${(durationHelpStaff) * 100}px,\n` +
