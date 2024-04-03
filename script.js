@@ -3,13 +3,16 @@
 let teams = ['bevers', 'leonardus', 'parcival', 'scouts', 'explorers', 'roverscouts', 'stam', 'bestuur'];
 
 class StaffMember {
-    constructor(name, team, helpYear, staffYear, leaderYear, lastYear) {
+    constructor(name, team, themeName, helpYear, staffYear, leaderYear, lastYear) {
         this.name = name;
         this.team = team;
+        this.themeName = themeName;
         this.helpYear = helpYear;
         this.staffYear = staffYear;
         this.leaderYear = leaderYear;
         this.lastYear = lastYear;
+
+        this.displayName = themeName ? name + ' | ' + themeName : name;
 
         this.minYear = [helpYear, staffYear, leaderYear].filter(Boolean).reduce((a, b) => Math.min(a, b));
         this.maxYear = [helpYear, staffYear, leaderYear, lastYear ? lastYear : new Date().getFullYear()].filter(Boolean).reduce((a, b) => Math.max(a, b));
@@ -25,20 +28,20 @@ function getStaff() {
     for (let i = 1; i < staffCount; i++) {
         // validate and format input
         let valueToPush = [];
-        for (let j = 0; j <= 5; j++) {
+        for (let j = 0; j <= 6; j++) {
             valueToPush[j] = children.children[i].children[j].innerHTML;
             if (j === 1) {
                 valueToPush[j] = valueToPush[j].toLowerCase();
                 valueToPush[j] = teams.includes(valueToPush[j]) ? valueToPush[j] : 'default';
             }
-            if (j > 1) valueToPush[j] = valueToPush[j].replace(/\D/g, ''); // only first two columns are not a number
+            if (j > 2) valueToPush[j] = valueToPush[j].replace(/\D/g, ''); // only first three columns are not a number
         }
-        let begin = Math.min(valueToPush[2] === "" ? Infinity : valueToPush[2],
-            valueToPush[3] === "" ? Infinity : valueToPush[3], valueToPush[4] === "" ? Infinity : valueToPush[4]);
+        let begin = Math.min(valueToPush[3] === "" ? Infinity : valueToPush[3],
+            valueToPush[4] === "" ? Infinity : valueToPush[4], valueToPush[5] === "" ? Infinity : valueToPush[5]);
 
         // skip invalid entries
-        if (!(valueToPush[2] || valueToPush[3] || valueToPush[4]) && // only if some years are entered
-            !(begin < valueToPush[5] || valueToPush[5] === '')) { // and did not staff for 0 years
+        if (!(valueToPush[3] || valueToPush[4] || valueToPush[5]) && // only if some years are entered
+            !(begin < valueToPush[6] || valueToPush[6] === '')) { // and did not staff for 0 years
             continue;
         }
 
@@ -181,7 +184,7 @@ function displayStaffMembers(staffMatrix, minYear) {
 //<script>
 // show a single staff member
 function showStaffMember(staffArray, minYear) {
-    let {name, team, helpYear, staffYear, leaderYear, lastYear} = staffArray;
+    let {name, team, displayName, helpYear, staffYear, leaderYear, lastYear} = staffArray;
     let begin = Math.min(helpYear === "" ? Infinity : helpYear,
         staffYear === "" ? Infinity : staffYear, leaderYear === "" ? Infinity : leaderYear);
     let ended = lastYear !== "";
@@ -210,12 +213,12 @@ function showStaffMember(staffArray, minYear) {
         this.onerror = null;
         this.src = "/src/person.jpg"; // PBworks: `/f/${name}.jpg or localhost: `src/${name}.jpg`
     };
-    img.alt = `${name}`;
+    img.alt = `${displayName}`;
     staffDiv.append(img);
 
     // add text
     let span = document.createElement("span");
-    span.append(`${name}`);
+    span.append(`${displayName}`);
     if (end - begin > 2) { // do not add years to text if only just started or only few years staff; and thus no space
         if (ended) {
             span.append(` (${begin} - ${end})`);
