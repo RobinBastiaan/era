@@ -80,12 +80,12 @@ function sortStaffByDate(staffArray) {
 function showEra() {
     let showOnlyLeaders = document.querySelector('input[name=show_only_leader]').checked;
     let showOnlyActive = document.querySelector('input[name=show_only_active]').checked;
-    let displayCompact = document.querySelector('input[name=display_compact]').checked;
+    let display = document.querySelector('input[name=display]:checked').value;
     let showTeams = {};
     document.querySelectorAll('#teams input[type="checkbox"]').forEach(checkbox => {
         showTeams[checkbox.name.slice(5)] = checkbox.checked; // remove "show_" part for the name of the checkbox.
     })
-    let staffArray =  sortStaffByDate(getStaff());
+    let staffArray = sortStaffByDate(getStaff());
     let minYear = new Date().getFullYear();
     let maxYear = 0;
 
@@ -93,7 +93,7 @@ function showEra() {
     let staffMatrix = [];
     let staffMatrixYears = [];
     for (let i = 0; i < staffArray.length; i++) {
-        if (!shouldIncludeStaffMember(staffArray[i], showOnlyLeaders, showOnlyActive, showTeams)) {
+        if (!shouldIncludeStaffMember(staffArray[i], showOnlyLeaders, showOnlyActive, showTeams, display)) {
             continue;
         }
 
@@ -105,7 +105,7 @@ function showEra() {
             .reduce((a, b) => Math.max(a, b));
         maxYear = staffArray[i]['lastYear'] ? maxYear : new Date().getFullYear(); // Take now as last year if still present.
 
-        if (displayCompact) {
+        if (display === 'compact') {
             let j = 0;
             let placeFound = false;
             while (!placeFound) {
@@ -117,6 +117,22 @@ function showEra() {
 
                     staffMatrix[j].push(staffArray[i]);
                     staffMatrixYears[j] = staffArray[i].maxYear;
+                    placeFound = true;
+                }
+
+                j++;
+            }
+        } else if (display === 'jungle-name') {
+            let j = 0;
+            let placeFound = false;
+            while (!placeFound) {
+                if (!staffMatrix[j] || staffMatrix[j][0].themeName === staffArray[i].themeName) {
+                    // Extend the outer array with empty arrays until the index exists.
+                    while (staffMatrix.length <= j) {
+                        staffMatrix.push([]);
+                    }
+
+                    staffMatrix[j].push(staffArray[i]);
                     placeFound = true;
                 }
 
@@ -147,7 +163,7 @@ function showEra() {
     document.getElementById("loading-gif").style.display = 'none';
 }
 
-function shouldIncludeStaffMember(staff, showOnlyLeaders, showOnlyActive, showTeams) {
+function shouldIncludeStaffMember(staff, showOnlyLeaders, showOnlyActive, showTeams, display) {
     if (showOnlyLeaders && !staff['leaderYear']) {
         return false;
     }
@@ -157,6 +173,11 @@ function shouldIncludeStaffMember(staff, showOnlyLeaders, showOnlyActive, showTe
     }
 
     if (!showTeams[staff['team']]) {
+        return false;
+    }
+
+    // Filter out staff without a theme name.
+    if (display === 'jungle-name' && !staff.themeName) {
         return false;
     }
 
@@ -183,6 +204,7 @@ function displayStaffMembers(staffMatrix, minYear) {
 
     return staffElements;
 }
+
 //</script>
 
 <!-- Second Section -->
@@ -232,7 +254,7 @@ function showStaffMember(staffArray, minYear) {
     let img = document.createElement("img");
     img.classList.add("staff-member__image");
     img.src = `/src/${name}.jpg`; // PBworks: `/f/${name}.jpg or localhost: `src/${name}.jpg`
-    img.onerror = function() {
+    img.onerror = function () {
         this.onerror = null;
         this.src = "/src/person.jpg"; // PBworks: `/f/${name}.jpg or localhost: `src/${name}.jpg`
     };
@@ -279,6 +301,11 @@ function showStaffMember(staffArray, minYear) {
 window.addEventListener('DOMContentLoaded', function () {
     if (document.getElementsByClassName('fullwidth').length === 0) {
         document.getElementById('expand-collapse-page-link')?.click()
+    }
+
+    var radioButtons = document.querySelectorAll('input[name="display"]');
+    for (let i = 0; i < radioButtons.length; i++) {
+        radioButtons[i].addEventListener('change', () => showEra());
     }
 
     setTimeout(showEra, 0);
