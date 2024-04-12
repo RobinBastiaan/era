@@ -4,9 +4,11 @@ See who was when a scout staff member.
 
 ## About
 
-This small web page plugin, that is heavily integrated to work on the PBworks platform, provides a graphical
-representation of the history of the staff team members. With updatability in mind, it has been made very easy for
-non-programmers to update the source table and add new profile images.
+This small web page plugin provides a graphical representation of the history of the staff team members. With
+updatability in mind, it has been made very easy for non-programmers to update the source table and add new profile
+images in a wiki style way. This plugin comes with a nice hover animation on each staff member where one will see the
+calculated total years a person was a staff member, and also gives the description of a theme name when present. With
+the filter & sorting options at the top, one can easily retrieve the presentation they would like to see.
 
 ## Installation & Inner workings
 
@@ -25,13 +27,11 @@ limitations that had to be built around with.
   have since removed it. As a consequence one will unfortunately have to change the `image src` when deploying manually.
 - The images are to be uploaded to the PBworks workspace to be used by the code and the page does provide a handy link
   to where that can be done.
-- Changing the colors of this project in order to be used in other (PBworks) color themes should be fairly easy via the
-  use of CSS custom properties.
+- Changing the colors of the various team colors should be fairly easy via the use of CSS custom properties.
 
 ## Preview
 
-This plugin comes with a nice hover animation where one will see the calculated total years a person was a staff member.
-![Era](https://user-images.githubusercontent.com/38226878/89960978-c0ddcb00-dc40-11ea-8c2a-110c4d642845.JPG)
+![Era](https://github.com/RobinBastiaan/era/assets/38226878/f1110288-1419-48c8-bf5b-07cd9e7e7bc0)
 
 <p align="center" width="100%">
     <img width="10%" src="favicon.png?raw=true"> 
