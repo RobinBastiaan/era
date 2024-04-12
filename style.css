@@ -148,6 +148,15 @@ input {
 .staff-member:hover .staff-member__tooltip {
     display: inline;
 }
+.staff-member:hover .staff-member__name {
+    display: none;
+}
+.staff-member__theme-name {
+    display: none;
+}
+.staff-member:hover .staff-member__theme-name {
+    display: inline;
+}
 
 #era__filters {
     position: relative;

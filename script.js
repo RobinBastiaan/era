@@ -1,6 +1,45 @@
 <!-- First Section - since the platform does not allow larger script tags, it is split -->
 //<script>
 let teams = ['bevers', 'leonardus', 'parcival', 'scouts', 'explorers', 'roverscouts', 'stam', 'bestuur'];
+let themeNameDescription = new Map([
+    ['Akela', 'Grote grijze wolf'],
+    ['Bagheera', 'Panter'],
+    ['Baloe', 'Beer'],
+    ['Chikai', 'Springmuis'],
+    ['Chil', 'Wouw'],
+    ['Chua', 'Rat'],
+    ['Dahinda', 'Brulkikker'],
+    ['Hathi', 'Olifant'],
+    ['Ikki', 'Stekelvarken'],
+    ['Jacala', 'Krokodil'],
+    ['Kaa', 'Python'],
+    ['Keego', 'Vis'],
+    ['Ko', 'Kraai'],
+    ['Limmershin', 'Winterkoninkje'],
+    ['Lowie', 'Orang-Oetan'],
+    ['Mang', 'Vleermuis'],
+    ['Marala', 'Flamingo'],
+    ['Mor', 'Pauw'],
+    ['Mysa', 'Buffel'],
+    ['Nag', 'Cobra'],
+    ['Oe', 'Schildpad'],
+    ['Oonai', 'Wolf'],
+    ['Phao', 'Wolf'],
+    ['Raksha', 'Moeder wolf'],
+    ['Rama', 'Buffel'],
+    ['Rani', 'Jonge tijger'],
+    ['Rikki-tikki-tavi', 'Mangoeste'],
+    ['Sahi', 'Stekelvarken'],
+    ['Shada', 'Pelikaan'],
+    ['Shere Khan', 'Tijger'],
+    ['Sona', 'Zwarte beer'],
+    ['Tabaqui', 'Jakhals'],
+    ['Tark', 'Visotter'],
+    ['Tha', 'Olifant'],
+    ['Thuu', 'Witte Cobra'],
+    ['Wontolla', 'Eenzame wolf'],
+    ['Xingoe', 'Hond'],
+]);
 
 class StaffMember {
     constructor(name, team, themeName, helpYear, staffYear, leaderYear, lastYear, fuzzyStart, fuzzyEnd) {
@@ -15,6 +54,7 @@ class StaffMember {
         this.fuzzyEnd = fuzzyEnd;
 
         this.displayName = themeName ? name + ' | ' + themeName : name;
+        this.displayNameDescription = themeName ? name + ' | ' + (themeName ? themeNameDescription.get(themeName) : '') : name;
 
         this.minYear = [helpYear, staffYear, leaderYear].filter(Boolean).reduce((a, b) => Math.min(a, b));
         this.maxYear = [helpYear, staffYear, leaderYear, lastYear ? lastYear : new Date().getFullYear()].filter(Boolean).reduce((a, b) => Math.max(a, b));
@@ -211,7 +251,7 @@ function displayStaffMembers(staffMatrix, minYear) {
 //<script>
 // show a single staff member
 function showStaffMember(staffArray, minYear) {
-    let {name, team, displayName, helpYear, staffYear, leaderYear, lastYear, fuzzyStart, fuzzyEnd} = staffArray;
+    let {name, team, displayName, displayNameDescription, helpYear, staffYear, leaderYear, lastYear, fuzzyStart, fuzzyEnd} = staffArray;
     let begin = Math.min(helpYear === "" ? Infinity : helpYear,
         staffYear === "" ? Infinity : staffYear, leaderYear === "" ? Infinity : leaderYear);
     let ended = lastYear !== "";
@@ -262,16 +302,23 @@ function showStaffMember(staffArray, minYear) {
     staffDiv.append(img);
 
     // add text
-    let span = document.createElement("span");
-    span.append(`${displayName}`);
+    let spanDisplayName = document.createElement("span");
+    spanDisplayName.classList.add("staff-member__name");
+    spanDisplayName.append(`${displayName}`);
     if (end - begin > 2) { // do not add years to text if only just started or only few years staff; and thus no space
         if (ended) {
-            span.append(` (${begin} - ${end})`);
+            spanDisplayName.append(` (${begin} - ${end})`);
         } else { // only show begin year when no yet ended
-            span.append(` (${begin})`);
+            spanDisplayName.append(` (${begin})`);
         }
     }
-    staffDiv.append(span);
+    staffDiv.append(spanDisplayName);
+
+    // add theme name description
+    let spanDisplayNameDescription = document.createElement("span");
+    spanDisplayNameDescription.classList.add("staff-member__theme-name");
+    spanDisplayNameDescription.append(displayNameDescription);
+    staffDiv.append(spanDisplayNameDescription);
 
     // add a tooltip, but only if the duration is more than 5 years
     if (durationHelpStaff + durationStaff + durationTeamLeader > 5) {
