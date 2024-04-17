@@ -1,5 +1,7 @@
-<!-- First Section - since the platform does not allow larger script tags, it is split -->
-//<script>
+//<!-- The Script for Era -->
+//<!-- Since the platform does not allow large file-size within a plugins-widget, the script has to be placed in multiple smaller plugins-widgets. -->
+
+//<script>/*1*//
 let teams = ['bevers', 'leonardus', 'parcival', 'scouts', 'explorers', 'roverscouts', 'stam', 'bestuur'];
 let themeNameDescription = new Map([
     ['Akela', 'Grote grijze wolf'],
@@ -115,7 +117,9 @@ function sortStaffByDate(staffArray) {
         }
     });
 }
+//</script>
 
+//<script>/*2*//
 // show the entire timeline of the era
 function showEra() {
     let showOnlyLeaders = document.querySelector('input[name=show_only_leader]').checked;
@@ -244,11 +248,9 @@ function displayStaffMembers(staffMatrix, minYear) {
 
     return staffElements;
 }
-
 //</script>
 
-<!-- Second Section -->
-//<script>
+//<script>/*3*//
 // show a single staff member
 function showStaffMember(staffArray, minYear) {
     let {name, team, displayName, displayNameDescription, helpYear, staffYear, leaderYear, lastYear, fuzzyStart, fuzzyEnd} = staffArray;
@@ -344,7 +346,9 @@ function showStaffMember(staffArray, minYear) {
 
     return staffDiv;
 }
+//</script>
 
+//<script>/*4*//
 window.addEventListener('DOMContentLoaded', function () {
     if (document.getElementsByClassName('fullwidth').length === 0) {
         document.getElementById('expand-collapse-page-link')?.click()
