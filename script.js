@@ -1,7 +1,7 @@
 //<!-- The Script for Era -->
 //<!-- Since the platform does not allow large file-size within a plugins-widget, the script has to be placed in multiple smaller plugins-widgets. -->
 
-//<script>/*1*//
+//<script>//1
 let teams = ['bevers', 'leonardus', 'parcival', 'scouts', 'explorers', 'roverscouts', 'stam', 'bestuur'];
 let themeNameDescription = new Map([
     ['Akela', 'Grote grijze wolf'],
@@ -55,8 +55,8 @@ class StaffMember {
         this.fuzzyStart = fuzzyStart;
         this.fuzzyEnd = fuzzyEnd;
 
-        this.displayName = themeName ? name + ' | ' + themeName : name;
-        this.displayNameDescription = themeName ? name + ' | ' + (themeName ? themeNameDescription.get(themeName) : '') : name;
+        this.displayName = (themeName && themeName !== '&nbsp;') ? name + ' | ' + themeName : name;
+        this.displayNameDescription = (themeName && themeName !== '&nbsp;') ? name + ' | ' + (themeName ? themeNameDescription.get(themeName) : '') : name;
 
         this.minYear = [helpYear, staffYear, leaderYear].filter(Boolean).reduce((a, b) => Math.min(a, b));
         this.maxYear = [helpYear, staffYear, leaderYear, lastYear ? lastYear : new Date().getFullYear()].filter(Boolean).reduce((a, b) => Math.max(a, b));
@@ -98,7 +98,9 @@ function getStaff() {
 
     return staffArray;
 }
+//</script>
 
+//<script>//2
 function sortStaffByDate(staffArray) {
     return staffArray.sort(function (a, b) {
         let beginYearA = parseInt([a.helpYear, a.staffYear, a.leaderYear].filter(Boolean).reduce((a, b) => Math.min(a, b))),
@@ -117,9 +119,7 @@ function sortStaffByDate(staffArray) {
         }
     });
 }
-//</script>
 
-//<script>/*2*//
 // show the entire timeline of the era
 function showEra() {
     let showOnlyLeaders = document.querySelector('input[name=show_only_leader]').checked;
@@ -206,7 +206,9 @@ function showEra() {
     eraResult.append(eraDiv);
     document.getElementById("loading-gif").style.display = 'none';
 }
+//</script>
 
+//<script>//3
 function shouldIncludeStaffMember(staff, showOnlyLeaders, showOnlyActive, showTeams, display) {
     if (showOnlyLeaders && !staff['leaderYear']) {
         return false;
@@ -221,7 +223,7 @@ function shouldIncludeStaffMember(staff, showOnlyLeaders, showOnlyActive, showTe
     }
 
     // Filter out staff without a theme name.
-    if (display === 'jungle-name' && !staff.themeName) {
+    if (display === 'jungle-name' && (!staff.themeName || staff.themeName === '&nbsp;')) {
         return false;
     }
 
@@ -250,7 +252,7 @@ function displayStaffMembers(staffMatrix, minYear) {
 }
 //</script>
 
-//<script>/*3*//
+//<script>//4
 // show a single staff member
 function showStaffMember(staffArray, minYear) {
     let {name, team, displayName, displayNameDescription, helpYear, staffYear, leaderYear, lastYear, fuzzyStart, fuzzyEnd} = staffArray;
@@ -348,7 +350,7 @@ function showStaffMember(staffArray, minYear) {
 }
 //</script>
 
-//<script>/*4*//
+//<script>//5
 window.addEventListener('DOMContentLoaded', function () {
     if (document.getElementsByClassName('fullwidth').length === 0) {
         document.getElementById('expand-collapse-page-link')?.click()

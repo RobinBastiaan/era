@@ -179,6 +179,10 @@ input {
     text-align: center;
 }
 
+.era__filter-section label {
+    display: inline-block;
+}
+
 #era__footer {
     font-weight: lighter;
     font-style: italic;
