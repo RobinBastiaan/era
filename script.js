@@ -79,7 +79,9 @@ class StaffMemberEntry {
         this.maxYear = parseInt([helpYear, staffYear, leaderYear, lastYear ? lastYear : new Date().getFullYear()].filter(Boolean).reduce((a, b) => Math.max(a, b)));
     }
 }
+//</script>
 
+//<script>//2
 // Build an array of StaffMembers with StaffMemberEntries from table data.
 function getStaff() {
     let children = document.getElementById("source-table").children[0];
@@ -124,9 +126,7 @@ function getStaff() {
 
     return staffArray;
 }
-//</script>
 
-//<script>//2
 function sortStaffByDate(staffArray) {
     // First sort the entries of each staff member.
     staffArray = staffArray.map(staffMember => {
@@ -159,51 +159,15 @@ function sortRules(a, b) {
         return (a.lastYear < b.lastYear) ? -1 : 1;
     }
 }
+//</script>
 
-// show the entire timeline of the era
-function showEra() {
-    let showOnlyLeaders = document.querySelector('input[name=show_only_leader]').checked;
-    let showOnlyActive = document.querySelector('input[name=show_only_active]').checked;
-    let displayType = document.querySelector('input[name=display]:checked').value;
-    let showTeams = {};
-    document.querySelectorAll('#teams input[type="checkbox"]').forEach(checkbox => {
-        showTeams[checkbox.name.slice(5)] = checkbox.checked; // remove "show_" part for the name of the checkbox.
-    });
-    let selectedName = document.querySelector('select[name=name]').value;
-
-    let staffArray = sortStaffByDate(filterStaff(getStaff(), showOnlyLeaders, showOnlyActive, showTeams, displayType, selectedName));
-    let minYear = new Date().getFullYear();
-    let maxYear = 0;
-
-    // Split all staff members into single entries for better sorting when displaying compact.
-    if (displayType === 'compact') {
-        let splitArray = [];
-        staffArray.forEach(staffMember => {
-            staffMember.entries.forEach(entry => {
-                let staffMemberToPush = new StaffMember(staffMember.name);
-                staffMemberToPush.entries = [entry];
-                splitArray.push(staffMemberToPush);
-            });
-        });
-
-        staffArray = splitArray.sort(function (a, b) {
-            return sortRules(a.entries[0], b.entries[0]);
-        });
-    }
-
+//<script>//3
+function buildStaffMatrix(staffArray, displayType) {
     let staffMatrix = [];
     let staffMatrixYears = [];
+
     for (let i = 0; i < staffArray.length; i++) {
         for (let j = 0; j < staffArray[i].entries.length; j++) {
-            // calculate the min and max year for the entire era-result
-            minYear = [minYear, staffArray[i].entries[j]['helpYear'], staffArray[i].entries[j]['staffYear'], staffArray[i].entries[j]['leaderYear']]
-                .filter(Boolean)
-                .reduce((a, b) => Math.min(a, b));
-            maxYear = [maxYear, staffArray[i].entries[j]['staffYear'], staffArray[i].entries[j]['leaderYear'], staffArray[i].entries[j]['lastYear']]
-                .filter(Boolean)
-                .reduce((a, b) => Math.max(a, b));
-            maxYear = staffArray[i].entries[j]['lastYear'] ? maxYear : new Date().getFullYear(); // Take now as last year if still present.
-
             // Use the different display types to decide on which line a staff member should be displayed.
             if (displayType === 'compact') {
                 // Try to place each next staff member on a new line when there is place.
@@ -254,6 +218,57 @@ function showEra() {
         }
     }
 
+    return staffMatrix;
+}
+//</script>
+
+//<script>//4
+// show the entire timeline of the era
+function showEra() {
+    let showOnlyLeaders = document.querySelector('input[name=show_only_leader]').checked;
+    let showOnlyActive = document.querySelector('input[name=show_only_active]').checked;
+    let displayType = document.querySelector('input[name=display]:checked').value;
+    let showTeams = {};
+    document.querySelectorAll('#teams input[type="checkbox"]').forEach(checkbox => {
+        showTeams[checkbox.name.slice(5)] = checkbox.checked; // remove "show_" part for the name of the checkbox.
+    });
+    let selectedName = document.querySelector('select[name=name]').value;
+
+    let staffArray = sortStaffByDate(filterStaff(getStaff(), showOnlyLeaders, showOnlyActive, showTeams, displayType, selectedName));
+    let minYear = new Date().getFullYear();
+    let maxYear = 0;
+
+    // Split all staff members into single entries for better sorting.
+    if (displayType === 'compact' || displayType === 'waterfall') {
+        let splitArray = [];
+        staffArray.forEach(staffMember => {
+            staffMember.entries.forEach(entry => {
+                let staffMemberToPush = new StaffMember(staffMember.name);
+                staffMemberToPush.entries = [entry];
+                splitArray.push(staffMemberToPush);
+            });
+        });
+
+        staffArray = splitArray.sort(function (a, b) {
+            return sortRules(a.entries[0], b.entries[0]);
+        });
+    }
+
+    for (let i = 0; i < staffArray.length; i++) {
+        for (let j = 0; j < staffArray[i].entries.length; j++) {
+            // calculate the min and max year for the entire era-result
+            minYear = [minYear, staffArray[i].entries[j]['helpYear'], staffArray[i].entries[j]['staffYear'], staffArray[i].entries[j]['leaderYear']]
+                .filter(Boolean)
+                .reduce((a, b) => Math.min(a, b));
+            maxYear = [maxYear, staffArray[i].entries[j]['staffYear'], staffArray[i].entries[j]['leaderYear'], staffArray[i].entries[j]['lastYear']]
+                .filter(Boolean)
+                .reduce((a, b) => Math.max(a, b));
+            maxYear = staffArray[i].entries[j]['lastYear'] ? maxYear : new Date().getFullYear(); // Take now as last year if still present.
+        }
+    }
+
+    let staffMatrix = buildStaffMatrix(staffArray, displayType);
+
     // add era div
     let eraResult = document.getElementById('era-result');
     let eraDiv = document.createElement("div");
@@ -282,9 +297,7 @@ function showEra() {
     eraResult.append(eraDiv);
     document.getElementById("loading-gif").style.display = 'none';
 }
-//</script>
 
-//<script>//3
 function filterStaff(staffArray, showOnlyLeaders, showOnlyActive, showTeams, displayType, selectedName) {
     for (let i = staffArray.length - 1; i >= 0; i--) {
         if (selectedName && selectedName !== staffArray[i].name) {
@@ -328,7 +341,9 @@ function shouldIncludeStaffEntry(staffEntry, showOnlyLeaders, showOnlyActive, sh
 
     return true;
 }
+//</script>
 
+//<script>//5
 function displayStaffMembers(staffMatrix, minYear) {
     let previousYear = minYear;
     let staffElements = [];
@@ -351,7 +366,7 @@ function displayStaffMembers(staffMatrix, minYear) {
 }
 //</script>
 
-//<script>//4
+//<script>//6
 // show a single staff member
 function showStaffMember(staffMember, minYear) {
     let name = staffMember.name;
@@ -452,7 +467,7 @@ function showStaffMember(staffMember, minYear) {
 }
 //</script>
 
-//<script>//5
+//<script>//7
 window.addEventListener('DOMContentLoaded', function () {
     if (document.getElementsByClassName('fullwidth').length === 0) {
         document.getElementById('expand-collapse-page-link')?.click()
