@@ -121,7 +121,7 @@ function getStaff() {
 
         staffMember.addEntry(staffMemberEntry);
     }
-    console.log(JSON.stringify(staffArray))
+
     return staffArray;
 }
 //</script>
@@ -174,6 +174,22 @@ function showEra() {
     let staffArray = sortStaffByDate(filterStaff(getStaff(), showOnlyLeaders, showOnlyActive, showTeams, displayType, selectedName));
     let minYear = new Date().getFullYear();
     let maxYear = 0;
+
+    // Split all staff members into single entries for better sorting when displaying compact.
+    if (displayType === 'compact') {
+        let splitArray = [];
+        staffArray.forEach(staffMember => {
+            staffMember.entries.forEach(entry => {
+                let staffMemberToPush = new StaffMember(staffMember.name);
+                staffMemberToPush.entries = [entry];
+                splitArray.push(staffMemberToPush);
+            });
+        });
+
+        staffArray = splitArray.sort(function (a, b) {
+            return sortRules(a.entries[0], b.entries[0]);
+        });
+    }
 
     let staffMatrix = [];
     let staffMatrixYears = [];
