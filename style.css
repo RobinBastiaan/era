@@ -158,6 +158,9 @@ input {
 .staff-member__theme-name {
     display: none;
 }
+#names-label {
+    display: none;
+}
 .staff-member:hover .staff-member__theme-name {
     display: inline;
 }

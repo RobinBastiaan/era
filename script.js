@@ -44,26 +44,43 @@ let themeNameDescription = new Map([
 ]);
 
 class StaffMember {
-    constructor(name, team, themeName, helpYear, staffYear, leaderYear, lastYear, fuzzyStart, fuzzyEnd) {
+    constructor(name) {
         this.name = name;
-        this.team = team;
-        this.themeName = themeName;
-        this.helpYear = helpYear;
-        this.staffYear = staffYear;
-        this.leaderYear = leaderYear;
-        this.lastYear = lastYear;
-        this.fuzzyStart = fuzzyStart;
-        this.fuzzyEnd = fuzzyEnd;
+        this.entries = [];
+    }
 
-        this.displayName = (themeName && themeName !== '&nbsp;') ? name + ' | ' + themeName : name;
-        this.displayNameDescription = (themeName && themeName !== '&nbsp;') ? name + ' | ' + (themeName ? themeNameDescription.get(themeName) : '') : name;
+    addEntry(entry) {
+        this.entries.push(entry);
+    }
 
-        this.minYear = [helpYear, staffYear, leaderYear].filter(Boolean).reduce((a, b) => Math.min(a, b));
-        this.maxYear = [helpYear, staffYear, leaderYear, lastYear ? lastYear : new Date().getFullYear()].filter(Boolean).reduce((a, b) => Math.max(a, b));
+    displayName(entry) {
+        entry = entry ?? this.entry ?? this.entries[0];
+        return entry.themeName && entry.themeName !== '&nbsp;' ? this.name + ' | ' + entry.themeName : this.name;
+    }
+
+    displayNameDescription(entry) {
+        entry = entry ?? this.entry ?? this.entries[0];
+        return entry.themeName && entry.themeName !== '&nbsp;' ? this.name + ' | ' + (entry.themeName ? themeNameDescription.get(entry.themeName) : '') : this.name;
     }
 }
 
-// Build an array of StaffMembers from table data.
+class StaffMemberEntry {
+    constructor(team, themeName, helpYear, staffYear, leaderYear, lastYear, fuzzyStart, fuzzyEnd) {
+        this.team = team;
+        this.themeName = themeName === '&nbsp;' ? '' : themeName;
+        this.helpYear = parseInt(helpYear) || null;
+        this.staffYear = parseInt(staffYear) || null;
+        this.leaderYear = parseInt(leaderYear) || null;
+        this.lastYear = parseInt(lastYear) || null;
+        this.fuzzyStart = fuzzyStart;
+        this.fuzzyEnd = fuzzyEnd;
+
+        this.minYear = parseInt([helpYear, staffYear, leaderYear].filter(Boolean).reduce((a, b) => Math.min(a, b)));
+        this.maxYear = parseInt([helpYear, staffYear, leaderYear, lastYear ? lastYear : new Date().getFullYear()].filter(Boolean).reduce((a, b) => Math.max(a, b)));
+    }
+}
+
+// Build an array of StaffMembers with StaffMemberEntries from table data.
 function getStaff() {
     let children = document.getElementById("source-table").children[0];
     let staffCount = children.childElementCount;
@@ -72,118 +89,152 @@ function getStaff() {
     for (let i = 1; i < staffCount; i++) {
         // validate and format input
         let valueToPush = [];
-        for (let j = 0; j <= 6; j++) {
-            valueToPush[j] = children.children[i].children[j].innerHTML;
+        for (let j = 1; j <= 6; j++) {
+            valueToPush[j - 1] = children.children[i].children[j].innerHTML;
             if (j === 1) {
-                valueToPush[j] = valueToPush[j].toLowerCase();
-                valueToPush[j] = teams.includes(valueToPush[j]) ? valueToPush[j] : 'default';
+                valueToPush[j - 1] = valueToPush[j - 1].toLowerCase();
+                // Gracefully cast empty and unknown teams to 'default', so they can be displayed.
+                valueToPush[j - 1] = teams.includes(valueToPush[j - 1]) ? valueToPush[j - 1] : 'default';
             }
-            if (j > 2) valueToPush[j] = valueToPush[j].replace(/\D/g, ''); // only first three columns are not a number
+            if (j > 2) valueToPush[j - 1] = valueToPush[j - 1].replace(/\D/g, ''); // only first three columns are not a number
         }
-        let begin = Math.min(valueToPush[3] === "" ? Infinity : valueToPush[3],
-            valueToPush[4] === "" ? Infinity : valueToPush[4], valueToPush[5] === "" ? Infinity : valueToPush[5]);
+        let begin = Math.min(valueToPush[2] === "" ? Infinity : valueToPush[2],
+            valueToPush[3] === "" ? Infinity : valueToPush[3], valueToPush[4] === "" ? Infinity : valueToPush[4]);
 
         // skip invalid entries
-        if (!(valueToPush[3] || valueToPush[4] || valueToPush[5]) && // only if some years are entered
-            !(begin < valueToPush[6] || valueToPush[6] === '')) { // and did not staff for 0 years
+        if (!(valueToPush[2] || valueToPush[3] || valueToPush[4]) && // only if some years are entered
+            !(begin < valueToPush[5] || valueToPush[5] === '')) { // and did not staff for 0 years
+            console.error('The following entry was not valid: ' + children.children[i]);
             continue;
         }
 
         valueToPush.push(children.children[i].children[4].innerHTML.includes('~') || children.children[i].children[5].innerHTML.includes('~'));
         valueToPush.push(children.children[i].children[6].innerHTML.includes('~'));
 
-        let staffMember = new StaffMember(...valueToPush);
-        staffArray.push(staffMember);
-    }
+        let staffMemberEntry = new StaffMemberEntry(...valueToPush);
 
+        let staffMember = staffArray.find(obj => obj.name === children.children[i].children[0].innerHTML);
+        if (!staffMember) {
+            staffMember = new StaffMember(children.children[i].children[0].innerHTML);
+            staffArray.push(staffMember);
+        }
+
+        staffMember.addEntry(staffMemberEntry);
+    }
+    console.log(JSON.stringify(staffArray))
     return staffArray;
 }
 //</script>
 
 //<script>//2
 function sortStaffByDate(staffArray) {
-    return staffArray.sort(function (a, b) {
-        let beginYearA = parseInt([a.helpYear, a.staffYear, a.leaderYear].filter(Boolean).reduce((a, b) => Math.min(a, b))),
-            beginYearB = parseInt([b.helpYear, b.staffYear, b.leaderYear].filter(Boolean).reduce((a, b) => Math.min(a, b)));
+    // First sort the entries of each staff member.
+    staffArray = staffArray.map(staffMember => {
+        staffMember.entries = staffMember.entries.sort(function (a, b) {
+            return sortRules(a, b);
+        });
 
-        if (beginYearA !== beginYearB) { // first started member first
-            return (beginYearA < beginYearB) ? -1 : 1;
-        } else if (!a.lastYear) { // not stopped member last
-            return 1;
-        } else if (!b.lastYear) { // not stopped member last
-            return -1;
-        } else if (a.lastYear === b.lastYear) { // same end year; no change
-            return 0;
-        } else { // first stopped member first
-            return (a.lastYear < b.lastYear) ? -1 : 1;
-        }
+        return staffMember;
     });
+
+    // Then sort the staff members among themselves by their first entry.
+    return staffArray.sort(function (a, b) {
+        return sortRules(a.entries[0], b.entries[0]);
+    });
+}
+
+function sortRules(a, b) {
+    let beginYearA = [a.helpYear, a.staffYear, a.leaderYear].filter(Boolean).reduce((a, b) => Math.min(a, b)),
+        beginYearB = [b.helpYear, b.staffYear, b.leaderYear].filter(Boolean).reduce((a, b) => Math.min(a, b));
+
+    if (beginYearA !== beginYearB) { // first started member first
+        return (beginYearA < beginYearB) ? -1 : 1;
+    } else if (!a.lastYear) { // not stopped member last
+        return 1;
+    } else if (!b.lastYear) { // not stopped member last
+        return -1;
+    } else if (a.lastYear === b.lastYear) { // same end year; no change
+        return 0;
+    } else { // first stopped member first
+        return (a.lastYear < b.lastYear) ? -1 : 1;
+    }
 }
 
 // show the entire timeline of the era
 function showEra() {
     let showOnlyLeaders = document.querySelector('input[name=show_only_leader]').checked;
     let showOnlyActive = document.querySelector('input[name=show_only_active]').checked;
-    let display = document.querySelector('input[name=display]:checked').value;
+    let displayType = document.querySelector('input[name=display]:checked').value;
     let showTeams = {};
     document.querySelectorAll('#teams input[type="checkbox"]').forEach(checkbox => {
         showTeams[checkbox.name.slice(5)] = checkbox.checked; // remove "show_" part for the name of the checkbox.
-    })
-    let staffArray = sortStaffByDate(getStaff());
+    });
+    let selectedName = document.querySelector('select[name=name]').value;
+
+    let staffArray = sortStaffByDate(filterStaff(getStaff(), showOnlyLeaders, showOnlyActive, showTeams, displayType, selectedName));
     let minYear = new Date().getFullYear();
     let maxYear = 0;
 
-    // calculate the min and max year to display
     let staffMatrix = [];
     let staffMatrixYears = [];
     for (let i = 0; i < staffArray.length; i++) {
-        if (!shouldIncludeStaffMember(staffArray[i], showOnlyLeaders, showOnlyActive, showTeams, display)) {
-            continue;
-        }
+        for (let j = 0; j < staffArray[i].entries.length; j++) {
+            // calculate the min and max year for the entire era-result
+            minYear = [minYear, staffArray[i].entries[j]['helpYear'], staffArray[i].entries[j]['staffYear'], staffArray[i].entries[j]['leaderYear']]
+                .filter(Boolean)
+                .reduce((a, b) => Math.min(a, b));
+            maxYear = [maxYear, staffArray[i].entries[j]['staffYear'], staffArray[i].entries[j]['leaderYear'], staffArray[i].entries[j]['lastYear']]
+                .filter(Boolean)
+                .reduce((a, b) => Math.max(a, b));
+            maxYear = staffArray[i].entries[j]['lastYear'] ? maxYear : new Date().getFullYear(); // Take now as last year if still present.
 
-        minYear = [minYear, staffArray[i]['helpYear'], staffArray[i]['staffYear'], staffArray[i]['leaderYear']]
-            .filter(Boolean)
-            .reduce((a, b) => Math.min(a, b));
-        maxYear = [maxYear, staffArray[i]['staffYear'], staffArray[i]['leaderYear'], staffArray[i]['lastYear']]
-            .filter(Boolean)
-            .reduce((a, b) => Math.max(a, b));
-        maxYear = staffArray[i]['lastYear'] ? maxYear : new Date().getFullYear(); // Take now as last year if still present.
+            // Use the different display types to decide on which line a staff member should be displayed.
+            if (displayType === 'compact') {
+                // Try to place each next staff member on a new line when there is place.
+                let k = 0;
+                let placeFound = false;
+                while (!placeFound) {
+                    if (!staffMatrixYears[k] || staffMatrixYears[k] <= staffArray[i].entries[j].minYear) {
+                        // Extend the outer array with empty arrays until the index exists.
+                        while (staffMatrix.length <= k) {
+                            staffMatrix.push([]);
+                        }
 
-        if (display === 'compact') {
-            let j = 0;
-            let placeFound = false;
-            while (!placeFound) {
-                if (!staffMatrixYears[j] || staffMatrixYears[j] <= staffArray[i].minYear) {
-                    // Extend the outer array with empty arrays until the index exists.
-                    while (staffMatrix.length <= j) {
-                        staffMatrix.push([]);
+                        staffMatrixYears[k] = staffArray[i].entries[j].maxYear;
+                        placeFound = true;
+
+                        let staffMemberToPush = new StaffMember(staffArray[i].name);
+                        staffMemberToPush.entry = staffArray[i].entries[j];
+                        staffMatrix[k].push(staffMemberToPush);
                     }
 
-                    staffMatrix[j].push(staffArray[i]);
-                    staffMatrixYears[j] = staffArray[i].maxYear;
-                    placeFound = true;
+                    k++;
                 }
+            } else if (displayType === 'jungle-name') {
+                // Display all staff members with the same jungle name on the same line.
+                let k = 0;
+                let placeFound = false;
+                while (!placeFound) {
+                    if (!staffMatrix[k] || staffMatrix[k][0].entry.themeName === staffArray[i].entries[j].themeName) {
+                        // Extend the outer array with empty arrays until the index exists.
+                        while (staffMatrix.length <= k) {
+                            staffMatrix.push([]);
+                        }
 
-                j++;
-            }
-        } else if (display === 'jungle-name') {
-            let j = 0;
-            let placeFound = false;
-            while (!placeFound) {
-                if (!staffMatrix[j] || staffMatrix[j][0].themeName === staffArray[i].themeName) {
-                    // Extend the outer array with empty arrays until the index exists.
-                    while (staffMatrix.length <= j) {
-                        staffMatrix.push([]);
+                        placeFound = true;
+
+                        let staffMemberToPush = new StaffMember(staffArray[i].name);
+                        staffMemberToPush.entry = staffArray[i].entries[j];
+                        staffMatrix[k].push(staffMemberToPush);
                     }
 
-                    staffMatrix[j].push(staffArray[i]);
-                    placeFound = true;
+                    k++;
                 }
-
-                j++;
+            } else {
+                let staffMemberToPush = new StaffMember(staffArray[i].name);
+                staffMemberToPush.entry = staffArray[i].entries[j];
+                staffMatrix.push([staffMemberToPush]);
             }
-        } else {
-            staffMatrix.push([staffArray[i]]);
         }
     }
 
@@ -201,6 +252,15 @@ function showEra() {
         eraDiv.append(div);
     }
 
+    // fill name select
+    let nameSelect = document.getElementById('names');
+    staffArray.map(staff => staff.name).sort().forEach(name => {
+        let option = document.createElement("option");
+        option.text = name;
+        option.value = name;
+        nameSelect.append(option);
+    });
+
     eraDiv.append(...(displayStaffMembers(staffMatrix, minYear)));
     eraResult.innerHTML = '';
     eraResult.append(eraDiv);
@@ -209,21 +269,44 @@ function showEra() {
 //</script>
 
 //<script>//3
-function shouldIncludeStaffMember(staff, showOnlyLeaders, showOnlyActive, showTeams, display) {
-    if (showOnlyLeaders && !staff['leaderYear']) {
+function filterStaff(staffArray, showOnlyLeaders, showOnlyActive, showTeams, displayType, selectedName) {
+    for (let i = staffArray.length - 1; i >= 0; i--) {
+        if (selectedName && selectedName !== staffArray[i].name) {
+            staffArray.splice(i, 1);
+            continue;
+        }
+
+        for (let j = staffArray[i].entries.length - 1; j >= 0; j--) {
+            if (shouldIncludeStaffEntry(staffArray[i].entries[j], showOnlyLeaders, showOnlyActive, showTeams, displayType)) {
+                continue;
+            }
+
+            staffArray[i].entries.splice(j, 1);
+        }
+
+        if (staffArray[i].entries.length === 0) {
+            staffArray.splice(i, 1);
+        }
+    }
+
+    return staffArray;
+}
+
+function shouldIncludeStaffEntry(staffEntry, showOnlyLeaders, showOnlyActive, showTeams, displayType) {
+    if (showOnlyLeaders && !staffEntry['leaderYear']) {
         return false;
     }
 
-    if (showOnlyActive && staff['lastYear']) {
+    if (showOnlyActive && staffEntry['lastYear']) {
         return false;
     }
 
-    if (!showTeams[staff['team']]) {
+    if (!showTeams[staffEntry['team']]) {
         return false;
     }
 
-    // Filter out staff without a theme name.
-    if (display === 'jungle-name' && (!staff.themeName || staff.themeName === '&nbsp;')) {
+    // Filter out staffEntry without a theme name.
+    if (displayType === 'jungle-name' && !staffEntry.themeName) {
         return false;
     }
 
@@ -241,7 +324,7 @@ function displayStaffMembers(staffMatrix, minYear) {
         for (let j = 0; j < staffMatrix[i].length; j++) {
             divLine.append(showStaffMember(staffMatrix[i][j], previousYear));
 
-            previousYear = staffMatrix[i][j].maxYear;
+            previousYear = staffMatrix[i][j].entry.maxYear;
         }
 
         previousYear = minYear;
@@ -254,17 +337,20 @@ function displayStaffMembers(staffMatrix, minYear) {
 
 //<script>//4
 // show a single staff member
-function showStaffMember(staffArray, minYear) {
-    let {name, team, displayName, displayNameDescription, helpYear, staffYear, leaderYear, lastYear, fuzzyStart, fuzzyEnd} = staffArray;
-    let begin = Math.min(helpYear === "" ? Infinity : helpYear,
-        staffYear === "" ? Infinity : staffYear, leaderYear === "" ? Infinity : leaderYear);
-    let ended = lastYear !== "";
-    let noEndWidth = lastYear === "" ? 50 : 0;
-    let stillStaffWidth = !lastYear && leaderYear === "" ? 50 : 0;
-    let end = lastYear === "" ? new Date().getFullYear() : lastYear; // if not ended; take current year
-    let durationHelpStaff = helpYear === "" ? 0 : (staffYear === "" ? end - helpYear : staffYear - helpYear);
-    let durationStaff = staffYear === "" ? 0 : (leaderYear === "" ? end - staffYear : leaderYear - staffYear);
-    let durationTeamLeader = leaderYear === "" ? 0 : end - leaderYear;
+function showStaffMember(staffMember, minYear) {
+    let name = staffMember.name;
+    let displayName = staffMember.displayName();
+    let displayNameDescription = staffMember.displayNameDescription();
+    let {team, helpYear, staffYear, leaderYear, lastYear, fuzzyStart, fuzzyEnd} = staffMember.entry;
+
+    let begin = Math.min(...[helpYear, staffYear, leaderYear].filter(num => num !== null));
+    let ended = !!lastYear;
+    let end = lastYear ?? new Date().getFullYear(); // if not ended; take current year
+    let durationHelpStaff = helpYear ? (staffYear ? staffYear - helpYear : end - helpYear) : 0;
+    let durationStaff = staffYear ? (leaderYear ? leaderYear - staffYear : end - staffYear) : 0;
+    let durationTeamLeader = leaderYear ? end - leaderYear : 0;
+    let noEndWidth = !ended ? 50 : 0;
+    let stillStaffWidth = !ended && !leaderYear ? 50 : 0;
 
     // add div
     let staffDiv = document.createElement("div");
@@ -337,7 +423,7 @@ function showStaffMember(staffArray, minYear) {
             let still = (!lastYear && leaderYear === '') ? 'al ' : ''; // still staff indicator
             titleText = titleText.concat(`${still}${durationStaff} jaar staflid`);
         }
-        if (leaderYear !== '') {
+        if (leaderYear) {
             if (durationStaff > 0) titleText = titleText.concat(`, `);
             let still = (!lastYear) ? 'al ' : ''; // still teamleider indicator
             titleText = titleText.concat(`${still}${durationTeamLeader} jaar teamleider`);

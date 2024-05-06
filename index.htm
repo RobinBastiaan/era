@@ -236,7 +236,7 @@
             <tr>
                 <td>Sylvia de Zeeuw</td>
                 <td>Leonardus</td>
-                <td>Hati</td>
+                <td>Hathi</td>
                 <td>&nbsp;</td>
                 <td>&nbsp;</td>
                 <td>1985</td>
@@ -2513,12 +2513,12 @@
         <article id="era__filters">
             <section class="era__filter-section">
                 <label class="label-checkbox">
-                    <input class="hidden-checkbox" type="checkbox" name="show_only_leader" onchange="showEra()">
+                    <input type="checkbox" name="show_only_leader" onchange="showEra()">
                     Alleen teamleiders
                 </label>
 
                 <label class="label-checkbox">
-                    <input class="hidden-checkbox" type="checkbox" name="show_only_active" onchange="showEra()">
+                    <input type="checkbox" name="show_only_active" onchange="showEra()">
                     Alleen actieve leden
                 </label>
             </section>
@@ -2542,46 +2542,54 @@
 
             <section id="teams" class="era__filter-section">
                 <label class="label-checkbox">
-                    <input class="hidden-checkbox" type="checkbox" name="show_bevers" onchange="showEra()" checked>
+                    <input type="checkbox" name="show_bevers" onchange="showEra()" checked>
                     Bevers
                 </label>
 
                 <label class="label-checkbox">
-                    <input class="hidden-checkbox" type="checkbox" name="show_leonardus" onchange="showEra()" checked>
+                    <input type="checkbox" name="show_leonardus" onchange="showEra()" checked>
                     Leonardus
                 </label>
 
                 <label class="label-checkbox">
-                    <input class="hidden-checkbox" type="checkbox" name="show_parcival" onchange="showEra()" checked>
+                    <input type="checkbox" name="show_parcival" onchange="showEra()" checked>
                         Parcival
                 </label>
 
                 <label class="label-checkbox">
-                    <input class="hidden-checkbox" type="checkbox" name="show_scouts" onchange="showEra()" checked>
+                    <input type="checkbox" name="show_scouts" onchange="showEra()" checked>
                         Scouts
                 </label>
 
                 <br>
 
                 <label class="label-checkbox">
-                    <input class="hidden-checkbox" type="checkbox" name="show_explorers" onchange="showEra()" checked>
+                    <input type="checkbox" name="show_explorers" onchange="showEra()" checked>
                         Explorers
                 </label>
 
                 <label class="label-checkbox">
-                    <input class="hidden-checkbox" type="checkbox" name="show_roverscouts" onchange="showEra()" checked>
+                    <input type="checkbox" name="show_roverscouts" onchange="showEra()" checked>
                         Roverscouts
                 </label>
 
                 <label class="label-checkbox">
-                    <input class="hidden-checkbox" type="checkbox" name="show_stam" onchange="showEra()" checked>
+                    <input type="checkbox" name="show_stam" onchange="showEra()" checked>
                         Stam
                 </label>
 
                 <label class="label-checkbox">
-                    <input class="hidden-checkbox" type="checkbox" name="show_bestuur" onchange="showEra()" checked>
+                    <input type="checkbox" name="show_bestuur" onchange="showEra()" checked>
                         Bestuur
                 </label>
+            </section>
+
+            <section class="era__filter-section">
+                <label id="names-label" for="names">Naam</label>
+                <select name="name" id="names" onchange="showEra()">
+                    <option value="">Selecteer een naam</option>
+                    <!-- Names to select will be added by JS. -->
+                </select>
             </section>
         </article>
 
