@@ -3,6 +3,7 @@
 
 //<script>//1
 let teams = ['bevers', 'leonardus', 'parcival', 'scouts', 'explorers', 'roverscouts', 'stam', 'bestuur'];
+// Each theme name is an animal.
 let themeNameDescription = new Map([
     ['Akela', 'Grote grijze wolf'],
     ['Bagheera', 'Panter'],
@@ -53,6 +54,7 @@ class StaffMember {
         this.entries.push(entry);
     }
 
+    // Each staff member has a different display name for each entry.
     displayName(entry) {
         entry = entry ?? this.entry ?? this.entries[0];
         return entry.themeName && entry.themeName !== '&nbsp;' ? this.name + ' | ' + entry.themeName : this.name;
@@ -72,6 +74,7 @@ class StaffMemberEntry {
         this.staffYear = parseInt(staffYear) || null;
         this.leaderYear = parseInt(leaderYear) || null;
         this.lastYear = parseInt(lastYear) || null;
+        // To mark the given years as being uncertain or an estimate, and be displayed like that accordingly.
         this.fuzzyStart = fuzzyStart;
         this.fuzzyEnd = fuzzyEnd;
 
@@ -83,6 +86,8 @@ class StaffMemberEntry {
 
 //<script>//2
 // Build an array of StaffMembers with StaffMemberEntries from table data.
+// Note: the data of the input table is optimised for easy entry by users following the most common progression for staff members.
+// Meaning that in order to work properly with it, it is normalised during this reading step of the JS code.
 function getStaff() {
     let children = document.getElementById("source-table").children[0];
     let staffCount = children.childElementCount;
@@ -162,6 +167,7 @@ function sortRules(a, b) {
 //</script>
 
 //<script>//3
+// Transform the staffArray to a staffMatrix to determine on which line each entry will be displayed.
 function buildStaffMatrix(staffArray, displayType) {
     let staffMatrix = [];
     let staffMatrixYears = [];
@@ -211,6 +217,7 @@ function buildStaffMatrix(staffArray, displayType) {
                     k++;
                 }
             } else {
+                // Simply place each entry on a new line.
                 let staffMemberToPush = new StaffMember(staffArray[i].name);
                 staffMemberToPush.entry = staffArray[i].entries[j];
                 staffMatrix.push([staffMemberToPush]);
@@ -223,7 +230,7 @@ function buildStaffMatrix(staffArray, displayType) {
 //</script>
 
 //<script>//4
-// show the entire timeline of the era
+// Show the entire timeline of the era.
 function showEra() {
     let showOnlyLeaders = document.querySelector('input[name=show_only_leader]').checked;
     let showOnlyActive = document.querySelector('input[name=show_only_active]').checked;

@@ -43,6 +43,12 @@ input {
     vertical-align: middle;
 }
 
+.center {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
 #source-table { /* only show the source table when editing the page */
     display: none;
 }
