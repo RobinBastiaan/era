@@ -12,6 +12,7 @@ let themeNameDescription = new Map([
     ['Chil', 'Wouw'],
     ['Chua', 'Rat'],
     ['Dahinda', 'Brulkikker'],
+    ['Darzee', 'Naaivogeltje'],
     ['Hathi', 'Olifant'],
     ['Ikki', 'Stekelvarken'],
     ['Jacala', 'Krokodil'],
@@ -89,7 +90,7 @@ class StaffMemberEntry {
 // Note: the data of the input table is optimised for easy entry by users following the most common progression for staff members.
 // Meaning that in order to work properly with it, it is normalised during this reading step of the JS code.
 function getStaff() {
-    let children = document.getElementById("source-table").children[0];
+    let children = document.querySelector("#source-table > table")?.children[0];
     let staffCount = children.childElementCount;
     let staffArray = [];
 
